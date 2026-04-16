@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapping Your City as a Living System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-dark: #0F6E56;
+    --teal-mid: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-pale: #F2FBF7;
+    --amber: #EF9F27;
+    --amber-dark: #BA7517;
+    --amber-pale: #FAEEDA;
+    --coral: #D85A30;
+    --coral-pale: #FAECE7;
+    --purple: #534AB7;
+    --purple-pale: #EEEDFE;
+    --blue: #185FA5;
+    --blue-pale: #E6F1FB;
+    --text-dark: #1A1A1A;
+    --text-mid: #444;
+    --text-light: #777;
+    --bg: #F8F9F6;
+    --white: #fff;
+    --border: rgba(0,0,0,0.08);
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: #085041;
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(29,158,117,0.15);
+  }
+
+  .header-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .course-tag { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 1rem; font-weight: 500; }
+
+  .section-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.6rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+
+  header h1 em { font-style: italic; color: #9FE1CB; }
+
+  header p { color: rgba(255,255,255,0.7); font-size: 0.97rem; font-weight: 300; max-width: 500px; }
+
+  main { max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .step-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .step-btn {
+    flex: 1;
+    padding: 10px 8px;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .step-btn:last-child { border-right: none; }
+  .step-btn:hover { background: var(--teal-pale); color: var(--teal-dark); }
+  .step-btn.active { background: var(--teal-dark); color: #fff; font-weight: 500; }
+
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+
+  .section-sub { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1.75rem; }
+
+  /* FLOW MAP */
+  .flow-map {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 500px) { .flow-map { grid-template-columns: 1fr; } }
+
+  .flow-card {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    background: var(--white);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .flow-card:hover { transform: translateY(-2px); }
+  .flow-card.active-flow { border-color: transparent; }
+  .flow-card.people.active-flow { background: var(--teal-light); border-color: var(--teal-mid); }
+  .flow-card.info.active-flow { background: var(--blue-pale); border-color: var(--blue); }
+  .flow-card.resources.active-flow { background: var(--amber-pale); border-color: var(--amber); }
+  .flow-card.emotions.active-flow { background: var(--coral-pale); border-color: var(--coral); }
+
+  .flow-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+
+  .flow-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+
+  .people .flow-icon { background: var(--teal-light); }
+  .info .flow-icon { background: var(--blue-pale); }
+  .resources .flow-icon { background: var(--amber-pale); }
+  .emotions .flow-icon { background: var(--coral-pale); }
+
+  .flow-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+  }
+
+  .flow-def { font-size: 0.83rem; color: var(--text-mid); line-height: 1.5; }
+
+  .flow-examples {
+    display: none;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .active-flow .flow-examples { display: block; }
+
+  .flow-examples ul { padding-left: 1.1rem; }
+  .flow-examples li { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 4px; }
+
+  .flow-question {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--teal-dark);
+  }
+
+  /* FEEDBACK LOOPS */
+  .loop-visual {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .loop-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .loop-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .loop-btn:hover { border-color: var(--teal-mid); }
+  .loop-btn.active { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+
+  .loop-display {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .loop-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+
+  .badge-balancing { background: var(--teal-light); color: var(--teal-dark); }
+  .badge-reinforcing { background: var(--amber-pale); color: var(--amber-dark); }
+
+  .loop-chain {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 1.25rem;
+  }
+
+  .loop-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .loop-box {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.87rem;
+    color: var(--text-dark);
+  }
+
+  .loop-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0 4px 28px;
+    font-size: 11px;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  .arrow-line {
+    width: 2px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  .loop-insight {
+    background: var(--teal-pale);
+    border-left: 3px solid var(--teal-mid);
+    padding: 0.75rem 1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .loop-insight strong { color: var(--teal-dark); }
+
+  /* INTERDEPENDENCE MAP */
+  .inter-canvas {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inter-center {
+    background: var(--teal-dark);
+    color: #fff;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+
+  .inter-spokes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 500px;
+  }
+
+  .spoke-node {
+    background: var(--teal-pale);
+    border: 1.5px solid var(--teal-light);
+    border-radius: 24px;
+    padding: 6px 14px;
+    font-size: 0.83rem;
+    color: var(--teal-dark);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .spoke-node:hover { background: var(--teal-light); }
+
+  .spoke-node.highlighted {
+    background: var(--teal-mid);
+    color: #fff;
+    border-color: var(--teal-dark);
+  }
+
+  .spoke-detail {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    display: none;
+  }
+
+  .spoke-detail.show { display: block; }
+  .spoke-detail strong { color: var(--teal-dark); }
+
+  /* REFLECTION */
+  .your-city {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .your-city-header {
+    background: var(--teal-dark);
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+  }
+
+  .your-city-header h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+  .your-city-header p { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+
+  .mapping-prompts { padding: 1.5rem; }
+
+  .prompt-item {
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 0;
+  }
+
+  .prompt-item:last-child { border-bottom: none; }
+
+  .prompt-q {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .prompt-hint { font-size: 0.83rem; color: var(--text-light); }
+
+  textarea.prompt-field {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 60px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  textarea.prompt-field:focus { border-color: var(--teal-mid); background: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 02</span>
+    <div class="section-badge">📖 Bonus Material</div>
+    <h1>Mapping Your City<br><em>as a Living System</em></h1>
+    <p>A hands-on guide to seeing the flows, feedback loops, and interdependencies in your urban context.</p>
+  </div>
+</header>
+
+<main>
+  <nav class="step-nav" role="tablist">
+    <button class="step-btn active" onclick="showStep(0)">1 · The four flows</button>
+    <button class="step-btn" onclick="showStep(1)">2 · Feedback loops</button>
+    <button class="step-btn" onclick="showStep(2)">3 · Interdependence</button>
+    <button class="step-btn" onclick="showStep(3)">4 · Your city</button>
+  </nav>
+
+  <!-- STEP 0: FOUR FLOWS -->
+  <div class="step-panel active" id="step0">
+    <h2 class="section-title">The four flows</h2>
+    <p class="section-sub">A city's intelligence lives not in what stands still, but in what moves. Tap each flow to explore what it reveals in your city.</p>
+
+    <div class="flow-map">
+      <div class="flow-card people" onclick="toggleFlow(this)">
+        <div class="flow-header">
+          <div class="flow-icon">🚶</div>
+          <span class="flow-name">People</span>
+        </div>
+        <p class="flow-def">The movement of residents, commuters, visitors, migrants. The living pulse of the city.</p>
+        <div class="flow-examples">
+          <ul>
+            <li>Daily commuting patterns and where they break down</li>
+            <li>Which neighbourhoods people avoid — and why</li>
+            <li>Migration routes and how they reshape identity</li>
+            <li>Tourism flows and their effects on locals</li>
+          </ul>
+          <p class="flow-question">In your city: where do people flow freely, and where do they get stuck?</p>
+        </div>
+      </div>
+
+      <div class="flow-card info" onclick="toggleFlow(this)">
+        <div class="flow-header">
+          <div class="flow-icon">📡</div>
+          <span class="flow-name">Information</span>
+        </div>
+        <p class="flow-def">Data, signals, rumours, alerts, trust. The nervous system of the city.</p>
+        <div class="flow-examples">
+          <ul>
+            <li>Weak signals: rumours, social media bursts, trust shifts</li>
+            <li>Data infrastructure: what is measured and what is ignored</li>
+            <li>Institutional communication and its failures</li>
+            <li>Misinformation as a city system event</li>
+          </ul>
+          <p class="flow-question">In your city: what information do residents trust — and what gets ignored?</p>
+        </div>
+      </div>
+
+      <div class="flow-card resources" onclick="toggleFlow(this)">
+        <div class="flow-header">
+          <div class="flow-icon">⚡</div>
+          <span class="flow-name">Resources</span>
+        </div>
+        <p class="flow-def">Energy, water, goods, capital, materials. The metabolic system of the city.</p>
+        <div class="flow-examples">
+          <ul>
+            <li>Supply chains and their vulnerabilities</li>
+            <li>Energy consumption patterns and inequality</li>
+            <li>Food access and distribution across neighbourhoods</li>
+            <li>Financial flows: investment, extraction, circulation</li>
+          </ul>
+          <p class="flow-question">In your city: who has reliable access to resources — and who doesn't?</p>
+        </div>
+      </div>
+
+      <div class="flow-card emotions" onclick="toggleFlow(this)">
+        <div class="flow-header">
+          <div class="flow-icon">💬</div>
+          <span class="flow-name">Emotions</span>
+        </div>
+        <p class="flow-def">Collective mood, trust, pride, fear, tension, belonging. The immune system of the city.</p>
+        <div class="flow-examples">
+          <ul>
+            <li>Neighbourhood-level trust in institutions</li>
+            <li>Sense of safety and public dignity</li>
+            <li>Community solidarity and social cohesion</li>
+            <li>Collective grief, pride, and aspiration</li>
+          </ul>
+          <p class="flow-question">In your city: which emotional flows are most fragile right now?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: FEEDBACK LOOPS -->
+  <div class="step-panel" id="step1">
+    <h2 class="section-title">Feedback loops in action</h2>
+    <p class="section-sub">Cities learn through feedback — or they get stuck. Select a loop to trace how it works in a real urban system.</p>
+
+    <div class="loop-selector">
+      <button class="loop-btn active" onclick="showLoop(0, this)">Heat stress</button>
+      <button class="loop-btn" onclick="showLoop(1, this)">Transit crowding</button>
+      <button class="loop-btn" onclick="showLoop(2, this)">Safety decay</button>
+      <button class="loop-btn" onclick="showLoop(3, this)">Trust & participation</button>
+    </div>
+
+    <div class="loop-display" id="loopDisplay">
+      <!-- dynamically filled -->
+    </div>
+  </div>
+
+  <!-- STEP 2: INTERDEPENDENCE -->
+  <div class="step-panel" id="step2">
+    <h2 class="section-title">No challenge exists in isolation</h2>
+    <p class="section-sub">Pick an urban challenge below to trace its web of interdependence. Click the nodes to reveal connections.</p>
+
+    <div class="inter-canvas">
+      <div id="interCenter" class="inter-center">Housing<br>affordability</div>
+      <div class="inter-spokes" id="interSpokes">
+        <span class="spoke-node" onclick="selectSpoke(this, 'mobility')">Mobility access</span>
+        <span class="spoke-node" onclick="selectSpoke(this, 'health')">Public health</span>
+        <span class="spoke-node" onclick="selectSpoke(this, 'education')">Education access</span>
+        <span class="spoke-node" onclick="selectSpoke(this, 'trust')">Institutional trust</span>
+        <span class="spoke-node" onclick="selectSpoke(this, 'economy')">Local economy</span>
+        <span class="spoke-node" onclick="selectSpoke(this, 'environment')">Environmental quality</span>
+      </div>
+    </div>
+
+    <div class="spoke-detail" id="spokeDetail"></div>
+  </div>
+
+  <!-- STEP 3: YOUR CITY -->
+  <div class="step-panel" id="step3">
+    <h2 class="section-title">Map your city</h2>
+    <p class="section-sub">Now apply the frameworks to your own context. Use these prompts to build your personalised living system map.</p>
+
+    <div class="your-city">
+      <div class="your-city-header">
+        <h3>Your living city field notes</h3>
+        <p>Take your time. There are no correct answers — only honest observations.</p>
+      </div>
+      <div class="mapping-prompts">
+        <div class="prompt-item">
+          <p class="prompt-q">1. Which flow is most visibly strained in your city right now?</p>
+          <p class="prompt-hint">People, information, resources, or emotions — and what does that strain look like in practice?</p>
+          <textarea class="prompt-field" placeholder="Write your observation here..."></textarea>
+        </div>
+        <div class="prompt-item">
+          <p class="prompt-q">2. Describe one feedback loop you can observe in your city.</p>
+          <p class="prompt-hint">What is the original pressure, what response does it trigger, and what does that response cause next?</p>
+          <textarea class="prompt-field" placeholder="Trace the loop step by step..."></textarea>
+        </div>
+        <div class="prompt-item">
+          <p class="prompt-q">3. Pick one visible urban problem in your city. What are three other systems it is connected to?</p>
+          <p class="prompt-hint">Follow the interdependencies — each connection reveals something invisible about the system.</p>
+          <textarea class="prompt-field" placeholder="Problem: ... Connected to: (1) ... (2) ... (3) ..."></textarea>
+        </div>
+        <div class="prompt-item">
+          <p class="prompt-q">4. What is one weak signal you have noticed recently — something small that might indicate a bigger pattern?</p>
+          <p class="prompt-hint">A shift in behaviour, a conversation, a change you almost dismissed.</p>
+          <textarea class="prompt-field" placeholder="Describe the signal and what pattern you think it might be part of..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const loops = [
+    {
+      name: "Heat stress (balancing)",
+      type: "balancing",
+      nodes: ["Urban temperatures rise", "City plants trees, adds shade structures", "Green coverage reduces heat intensity", "Urban environment stabilises"],
+      insight: "<strong>Balancing loops seek equilibrium.</strong> When a city responds well to rising heat, it creates a corrective mechanism. But the loop only works if the intervention happens before the system tips. Delay is the enemy — and most cities act too late."
+    },
+    {
+      name: "Transit crowding (reinforcing)",
+      type: "reinforcing",
+      nodes: ["Bus overcrowding causes discomfort", "City adds more buses to relieve pressure", "Better service attracts more riders", "Crowding returns — often worse than before"],
+      insight: "<strong>Reinforcing loops amplify pressure.</strong> More buses attract more riders, which produces more crowding. The intervention feeds the loop. Intelligent cities break the loop by addressing underlying land use and modal shift — not just adding capacity."
+    },
+    {
+      name: "Safety decay (reinforcing)",
+      type: "reinforcing",
+      nodes: ["Public space feels unsafe", "People avoid the space", "Reduced activity makes it emptier and less safe", "Perception of danger intensifies"],
+      insight: "<strong>Abandoned spaces become less safe.</strong> This loop is self-reinforcing — once started, it accelerates. The intervention must target the human presence in the space, not just the 'problem'. Safety is a flow of people and belonging, not a product of enforcement alone."
+    },
+    {
+      name: "Trust & participation (reinforcing)",
+      type: "reinforcing",
+      nodes: ["Low civic trust reduces participation", "Low participation produces policies that miss lived reality", "Poor policy outcomes further erode trust", "Even fewer citizens engage — loop deepens"],
+      insight: "<strong>Trust loops are governance intelligence loops.</strong> When citizens disengage, city systems lose the feedback they need to improve. This is why participation is not a communication problem — it is a structural intelligence problem. Cities that break this loop build participatory infrastructure."
+    }
+  ];
+
+  const spokeData = {
+    mobility: "Housing affordability shapes where people can live — which determines how far they must commute. Expensive cities push residents to peripheral areas with poor transit, trapping them in car dependency. This mobility exclusion then feeds back into economic marginalisation and health outcomes.",
+    health: "Housing instability and overcrowding are direct predictors of mental and physical health outcomes. When families spend over 40% of income on rent, they face chronic stress, nutritional compromise, and deferred healthcare. Affordable housing is public health infrastructure.",
+    education: "Where families can afford to live determines which schools their children can access. Housing affordability shapes educational geography — concentrating poverty and opportunity in predictable spatial patterns. School quality becomes a housing externality.",
+    trust: "Gentrification and displacement — the visible face of affordability failure — erode community trust deeply. Long-term residents forced out of neighbourhoods they shaped lose voice, identity, and institutional connection. This produces the disengagement loop that makes governance harder.",
+    economy: "Unaffordable housing destabilises local economies in two ways: it pushes out workers who sustain essential services, and it concentrates economic risk in households with housing debt. A city of renters at the financial edge is a city with no economic shock absorbers.",
+    environment: "Dense, affordable, transit-served housing reduces per-capita carbon emissions dramatically. Sprawl — the market response to urban unaffordability — is an environmental catastrophe. The affordability crisis and the climate crisis are the same system, seen from different angles."
+  };
+
+  function showStep(index) {
+    document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+    document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === index));
+  }
+
+  function toggleFlow(card) {
+    const isActive = card.classList.contains('active-flow');
+    document.querySelectorAll('.flow-card').forEach(c => c.classList.remove('active-flow'));
+    if (!isActive) card.classList.add('active-flow');
+  }
+
+  function showLoop(index, btn) {
+    document.querySelectorAll('.loop-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const loop = loops[index];
+    const badgeClass = loop.type === 'balancing' ? 'badge-balancing' : 'badge-reinforcing';
+    const badgeLabel = loop.type === 'balancing' ? '⟳ Balancing loop' : '↑ Reinforcing loop';
+    const nodesHtml = loop.nodes.map((n, i) => {
+      const arrow = i < loop.nodes.length - 1 ? `<div class="loop-arrow"><div class="arrow-line"></div><span>leads to</span><div class="arrow-line"></div></div>` : '';
+      return `<div class="loop-node"><div class="loop-box">${n}</div></div>${arrow}`;
+    }).join('');
+    document.getElementById('loopDisplay').innerHTML = `
+      <span class="loop-type-badge ${badgeClass}">${badgeLabel}</span>
+      <div class="loop-chain">${nodesHtml}</div>
+      <div class="loop-insight">${loop.insight}</div>
+    `;
+  }
+
+  function selectSpoke(el, key) {
+    document.querySelectorAll('.spoke-node').forEach(s => s.classList.remove('highlighted'));
+    el.classList.add('highlighted');
+    const detail = document.getElementById('spokeDetail');
+    detail.innerHTML = `<strong>${el.textContent}</strong><br><br>${spokeData[key]}`;
+    detail.classList.add('show');
+  }
+
+  showLoop(0, document.querySelector('.loop-btn'));
+</script>
+</body>
+</html>

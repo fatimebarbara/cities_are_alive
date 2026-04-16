@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Living City Starter Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-dark: #0F6E56;
+    --teal-mid: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-pale: #F2FBF7;
+    --amber-mid: #EF9F27;
+    --amber-dark: #BA7517;
+    --coral-mid: #D85A30;
+    --purple-mid: #534AB7;
+    --text-dark: #1A1A1A;
+    --text-mid: #444;
+    --text-light: #777;
+    --bg: #FAFAF8;
+    --white: #fff;
+    --border: rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--teal-dark);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 10%;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .header-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .course-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  header h1 em { font-style: italic; color: #9FE1CB; }
+
+  header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 480px;
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .intro-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    border-left: 4px solid var(--teal-mid);
+  }
+
+  .intro-card p { color: var(--text-mid); font-size: 0.97rem; }
+
+  .intro-card strong { color: var(--teal-dark); }
+
+  .phase-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .phase-btn {
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .phase-btn:hover { border-color: var(--teal-mid); color: var(--teal-dark); }
+
+  .phase-btn.active {
+    background: var(--teal-dark);
+    border-color: var(--teal-dark);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .phase-panel { display: none; }
+  .phase-panel.active { display: block; }
+
+  .flip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 520px) { .flip-grid { grid-template-columns: 1fr; } }
+
+  .flip-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    min-height: 140px;
+  }
+
+  .flip-card:hover { border-color: var(--teal-mid); transform: translateY(-2px); }
+
+  .flip-card .front, .flip-card .back {
+    transition: opacity 0.3s;
+  }
+
+  .flip-card.revealed .front { display: none; }
+  .flip-card.revealed .back { display: block; }
+  .flip-card .back { display: none; }
+
+  .flip-card .icon {
+    font-size: 22px;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .flip-card h4 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .flip-card p {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  .flip-card .back h4 { color: var(--teal-dark); }
+
+  .flip-card .back p { color: var(--text-mid); }
+
+  .tap-hint {
+    font-size: 11px;
+    color: var(--teal-mid);
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    opacity: 0.7;
+  }
+
+  .flip-card.revealed .tap-hint { opacity: 0; }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+
+  .compare-table th {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  .compare-table th:first-child { color: var(--text-light); }
+  .compare-table th:nth-child(2) { color: var(--coral-mid); background: #FBF0EC; border-radius: 8px 8px 0 0; }
+  .compare-table th:nth-child(3) { color: var(--teal-dark); background: var(--teal-light); border-radius: 8px 8px 0 0; }
+
+  .compare-table td {
+    padding: 10px 14px;
+    font-size: 0.87rem;
+    border-top: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .compare-table td:first-child {
+    font-weight: 500;
+    color: var(--text-mid);
+    font-size: 0.82rem;
+  }
+
+  .compare-table td:nth-child(2) { background: #FBF0EC; color: #7a3322; }
+  .compare-table td:nth-child(3) { background: var(--teal-pale); color: var(--teal-dark); }
+
+  .reflection-box {
+    background: linear-gradient(135deg, #F2FBF7, #EAF7FF);
+    border: 1px solid #B5D4F4;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .reflection-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--teal-dark);
+    margin-bottom: 1.2rem;
+  }
+
+  .reflection-box ol {
+    padding-left: 1.2rem;
+  }
+
+  .reflection-box li {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .reflection-box li strong { color: var(--teal-dark); }
+
+  .walk-steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .walk-steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    align-items: flex-start;
+  }
+
+  .walk-steps li::before {
+    content: counter(step);
+    min-width: 32px;
+    height: 32px;
+    background: var(--teal-dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .walk-steps li p {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .walk-steps li strong { color: var(--text-dark); font-weight: 500; }
+
+  .signal-detector {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .signal-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .signal-row:last-child { border-bottom: none; }
+  .signal-row:hover { background: var(--teal-pale); }
+
+  .signal-row.expanded { background: var(--teal-light); }
+
+  .signal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-weak { background: #B4B2A9; }
+  .dot-pattern { background: var(--amber-mid); }
+  .dot-system { background: var(--teal-mid); }
+
+  .signal-label {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--text-dark);
+  }
+
+  .signal-expand {
+    font-size: 18px;
+    color: var(--text-light);
+    transition: transform 0.2s;
+  }
+
+  .signal-row.expanded .signal-expand { transform: rotate(45deg); color: var(--teal-dark); }
+
+  .signal-detail {
+    display: none;
+    padding: 0 16px 16px 40px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    background: var(--teal-pale);
+  }
+
+  .signal-detail.show { display: block; }
+
+  .signal-detail em { color: var(--teal-dark); font-style: normal; font-weight: 500; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-bar-wrap {
+    background: var(--border);
+    height: 4px;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--teal-mid);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .cta-strip {
+    background: var(--teal-dark);
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+
+  .cta-strip p { font-size: 0.95rem; opacity: 0.9; max-width: 420px; }
+
+  .cta-strip strong { display: block; font-size: 1.1rem; margin-bottom: 4px; opacity: 1; }
+
+  .cta-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .cta-btn:hover { background: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 01</span>
+    <div class="section-badge">📖 Bonus Material</div>
+    <h1>The Living City<br><em>Starter Guide</em></h1>
+    <p>Seeing your city through a new lens — before the journey begins.</p>
+  </div>
+</header>
+
+<main>
+  <div class="intro-card">
+    <p>This guide is your first act of perception. Before we talk about systems, flows, and feedback loops — we need to <strong>shift the lens</strong> through which you see the city around you. Most of us were trained to see cities as machines. This guide invites you to start seeing them as something far more alive.</p>
+  </div>
+
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:33%"></div></div>
+
+  <nav class="phase-nav" role="tablist">
+    <button class="phase-btn active" onclick="showPhase(0)" role="tab">1 · The lens shift</button>
+    <button class="phase-btn" onclick="showPhase(1)" role="tab">2 · City walk</button>
+    <button class="phase-btn" onclick="showPhase(2)" role="tab">3 · Signal practice</button>
+  </nav>
+
+  <!-- PHASE 0: THE LENS SHIFT -->
+  <div class="phase-panel active" id="phase0">
+    <h2 class="section-title">Two ways of seeing</h2>
+    <p class="section-sub">Tap each card to reveal how the living systems lens changes what you see.</p>
+
+    <div class="flip-grid">
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="front">
+          <span class="icon">🚦</span>
+          <h4>Traffic congestion</h4>
+          <p>Machine view: a capacity problem. Build more lanes.</p>
+        </div>
+        <div class="back">
+          <span class="icon">🔄</span>
+          <h4>A feedback loop signal</h4>
+          <p>Living systems view: congestion reveals misaligned land use, mobility habits, and governance silos — not just missing infrastructure.</p>
+        </div>
+        <span class="tap-hint">tap to reveal →</span>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="front">
+          <span class="icon">🏚️</span>
+          <h4>Declining neighbourhood</h4>
+          <p>Machine view: needs investment and renovation.</p>
+        </div>
+        <div class="back">
+          <span class="icon">🌱</span>
+          <h4>A system under stress</h4>
+          <p>Living systems view: a pattern produced by eroded trust, depleted social infrastructure, and institutional neglect — compounding over time.</p>
+        </div>
+        <span class="tap-hint">tap to reveal →</span>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="front">
+          <span class="icon">📊</span>
+          <h4>Rising crime statistics</h4>
+          <p>Machine view: a safety problem requiring enforcement.</p>
+        </div>
+        <div class="back">
+          <span class="icon">💬</span>
+          <h4>A trust indicator</h4>
+          <p>Living systems view: an emergent pattern from fragile community bonds, unequal access to opportunity, and depleted civic dignity.</p>
+        </div>
+        <span class="tap-hint">tap to reveal →</span>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="front">
+          <span class="icon">🌡️</span>
+          <h4>Urban heat island</h4>
+          <p>Machine view: a climate problem solved with shade and cooling.</p>
+        </div>
+        <div class="back">
+          <span class="icon">🌿</span>
+          <h4>A governance symptom</h4>
+          <p>Living systems view: an outcome of fragmented green space policy, infrastructure lock-in, and decades of decisions that prioritised speed over sustainability.</p>
+        </div>
+        <span class="tap-hint">tap to reveal →</span>
+      </div>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>City as machine</th>
+          <th>City as living system</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Core question</td><td>How do we fix this?</td><td>What pattern is producing this?</td></tr>
+        <tr><td>Success metric</td><td>Outputs delivered</td><td>Long-term resilience built</td></tr>
+        <tr><td>View of citizens</td><td>Users of services</td><td>Co-creators of outcomes</td></tr>
+        <tr><td>Decision logic</td><td>Linear cause-effect</td><td>Feedback loops &amp; adaptation</td></tr>
+        <tr><td>Response to failure</td><td>Fix the broken part</td><td>Understand the system producing it</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PHASE 1: CITY WALK -->
+  <div class="phase-panel" id="phase1">
+    <h2 class="section-title">The Living City Walk</h2>
+    <p class="section-sub">Next time you walk through your city, use these five observation lenses. Each one trains a different kind of urban perception.</p>
+
+    <ul class="walk-steps">
+      <li>
+        <p><strong>Look for flows, not buildings.</strong> Where are people moving? Where do they slow down? Where do goods, energy, and information travel? The city's intelligence lives in movement, not structure.</p>
+      </li>
+      <li>
+        <p><strong>Notice what's missing.</strong> Whose face is absent from this space? Which languages aren't spoken here? What kind of economic activity has been pushed out? Gaps reveal system choices.</p>
+      </li>
+      <li>
+        <p><strong>Find the feedback loops.</strong> Choose one behaviour you observe — a street avoided, a park empty at noon — and ask: what is producing this, and what is it reinforcing?</p>
+      </li>
+      <li>
+        <p><strong>Look for interdependence.</strong> Pick any visible urban challenge. Now identify three other city systems it is connected to. Housing connects to mobility connects to health connects to trust.</p>
+      </li>
+      <li>
+        <p><strong>Notice the emotions.</strong> The emotional climate of a neighbourhood is data. Is there tension? Ease? Pride? Resignation? These are not soft observations — they are systemic signals.</p>
+      </li>
+    </ul>
+
+    <div class="reflection-box">
+      <h3>After your walk — reflect</h3>
+      <ol>
+        <li>What is one thing you saw differently through these lenses that you would have previously overlooked?</li>
+        <li>What does the emotional tone of the space you observed tell you about the <strong>underlying system</strong>?</li>
+        <li>If you were a city leader, what is one question this observation would make you ask?</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PHASE 2: SIGNAL PRACTICE -->
+  <div class="phase-panel" id="phase2">
+    <h2 class="section-title">Reading the signals</h2>
+    <p class="section-sub">Living cities communicate through signals. Learn to distinguish noise from pattern from systemic truth. Tap each signal to understand what it reveals.</p>
+
+    <div class="legend">
+      <div class="legend-item"><span class="signal-dot dot-weak"></span> Weak signal</div>
+      <div class="legend-item"><span class="signal-dot dot-pattern"></span> Emerging pattern</div>
+      <div class="legend-item"><span class="signal-dot dot-system"></span> Systemic signal</div>
+    </div>
+
+    <div class="signal-detector">
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-weak"></span>
+        <span class="signal-label">A local café closes after 10 years</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">Alone, this is just change. But if 3–4 similar closures happen in one neighbourhood within 12 months — especially in anchor businesses — you may be observing the early signal of a <em>trust and vitality loop collapsing</em>. The weak signal is the single café. The systemic signal is the pattern of what's replacing it.</div>
+
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-pattern"></span>
+        <span class="signal-label">More parents driving children to school</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">This emerging pattern tells you something about <em>perceived street safety, trust in public space, and community cohesion</em>. It also feeds a reinforcing loop: more cars → less safe streets → even fewer children walking → even more cars. Intelligent cities intervene at the loop, not just the symptom.</div>
+
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-system"></span>
+        <span class="signal-label">Long-term residents leaving a neighbourhood</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">This is a systemic signal of <em>displacement and dignity depletion</em>. It indicates that housing, economic, or social pressures have reached a tipping point. The city's adaptive capacity in this area is collapsing. By the time this becomes visible in data, the feedback loop has been running for years.</div>
+
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-weak"></span>
+        <span class="signal-label">Fewer people using a city park on weekends</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">This weak signal could indicate dozens of things. Rather than assuming, a systems thinker asks: <em>what changed in the surrounding system?</em> A new shopping mall nearby? Rising insecurity? Changed demographics? Changed programming? One observation opens a web of questions.</div>
+
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-pattern"></span>
+        <span class="signal-label">Declining voter turnout in local elections</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">This emerging pattern is a <em>trust indicator</em>. It signals that residents feel their participation has little effect on outcomes — a sign of institutional distance. In a living systems model, this is not a communication problem. It is a governance intelligence problem. The system is not processing citizen feedback effectively.</div>
+
+      <div class="signal-row" onclick="toggleSignal(this)">
+        <span class="signal-dot dot-system"></span>
+        <span class="signal-label">Rising numbers of informal economy workers</span>
+        <span class="signal-expand">+</span>
+      </div>
+      <div class="signal-detail">A systemic signal of <em>foundational intelligence failing</em>: the formal economy is not absorbing people. This could trace back to educational mismatch, regulatory barriers, lack of digital access, or eroded institutional trust. The informal economy is the city's adaptive response to a system that isn't working for everyone.</div>
+    </div>
+
+    <div class="reflection-box">
+      <h3>Your signal practice</h3>
+      <ol>
+        <li>In your own city or context — what is one observation you've made recently that you initially dismissed as noise? What pattern might it be part of?</li>
+        <li>Think of a "visible" urban problem in your city. What is one <strong>weak signal</strong> that might have been visible 5–10 years before the problem became obvious?</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="cta-strip">
+    <div>
+      <strong>Ready for Section 02?</strong>
+      <p>You've shifted the lens. Now it's time to understand what's actually moving inside the living city — flows, loops, and the intelligence hidden in interdependence.</p>
+    </div>
+    <button class="cta-btn">Continue to Cities as Living Systems →</button>
+  </div>
+
+</main>
+
+<script>
+  function showPhase(index) {
+    document.querySelectorAll('.phase-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.phase-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === index);
+    });
+    const progress = [33, 66, 100];
+    document.getElementById('progressBar').style.width = progress[index] + '%';
+  }
+
+  function flipCard(card) {
+    card.classList.toggle('revealed');
+  }
+
+  function toggleSignal(row) {
+    const detail = row.nextElementSibling;
+    const isOpen = row.classList.contains('expanded');
+    document.querySelectorAll('.signal-row').forEach(r => r.classList.remove('expanded'));
+    document.querySelectorAll('.signal-detail').forEach(d => d.classList.remove('show'));
+    if (!isOpen) {
+      row.classList.add('expanded');
+      detail.classList.add('show');
+    }
+  }
+</script>
+</body>
+</html>

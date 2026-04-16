@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Your First City Intelligence Intervention</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F9F6; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--amber-dark);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+  .header-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 1rem; display: block; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,4vw,2.6rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: #FAC775; }
+  header p { color: rgba(255,255,255,0.7); font-size: 0.95rem; font-weight: 300; max-width: 520px; }
+
+  main { max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .progress-track {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .prog-step {
+    flex: 1;
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-light);
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    font-family: 'DM Sans', sans-serif;
+    position: relative;
+  }
+  .prog-step:last-child { border-right: none; }
+  .prog-step.done { color: var(--teal-dark); background: var(--teal-pale); }
+  .prog-step.active { background: var(--teal-dark); color: #fff; font-weight: 500; }
+  .prog-step .step-num { display: block; font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+
+  .step-panel { display: none; }
+  .step-panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .step-card-header {
+    padding: 1.5rem 2rem;
+    background: var(--teal-dark);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .step-number-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-card-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 2px; }
+  .step-card-header p { font-size: 0.82rem; opacity: 0.75; }
+
+  .step-card-body { padding: 1.75rem 2rem; }
+
+  .context-block {
+    background: var(--teal-pale);
+    border-left: 3px solid var(--teal);
+    padding: 1rem 1.25rem;
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.87rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  .context-block strong { color: var(--teal-dark); }
+
+  .pillar-pick-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 480px) { .pillar-pick-grid { grid-template-columns: 1fr; } }
+
+  .pillar-pick {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pillar-pick:hover { border-color: var(--teal); background: var(--teal-pale); }
+  .pillar-pick.selected { border-color: var(--teal); background: var(--teal-light); }
+
+  .pillar-pick .pick-icon { font-size: 20px; }
+  .pillar-pick .pick-name { font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
+  .pillar-pick .pick-q { font-size: 0.78rem; color: var(--text-light); margin-top: 2px; }
+
+  .field-label { font-size: 0.82rem; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+
+  textarea.work-field {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 70px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+
+  textarea.work-field:focus { border-color: var(--teal); background: #fff; }
+
+  .signal-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .signal-type {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+    color: var(--text-mid);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .signal-type:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .signal-type.selected { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+
+  .risk-slider-wrap { margin-bottom: 1.5rem; }
+
+  .risk-slider-wrap label { font-size: 0.82rem; font-weight: 500; color: var(--text-mid); display: flex; justify-content: space-between; margin-bottom: 8px; }
+
+  input[type="range"].risk-slider {
+    width: 100%;
+    accent-color: var(--teal-dark);
+    height: 6px;
+    cursor: pointer;
+  }
+
+  .risk-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); margin-top: 4px; }
+
+  .move-examples {
+    background: var(--amber-pale);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .move-examples h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dark); margin-bottom: 0.75rem; font-weight: 500; }
+
+  .move-examples ul { padding-left: 1rem; }
+  .move-examples li { font-size: 0.84rem; color: var(--text-mid); margin-bottom: 6px; }
+
+  .nav-btns { display: flex; gap: 10px; }
+
+  .btn-back {
+    padding: 10px 20px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  .btn-next {
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: none;
+    background: var(--teal-dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-next:hover { background: var(--teal); }
+
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .summary-header {
+    background: var(--teal-deep);
+    padding: 1.5rem 2rem;
+    color: #fff;
+  }
+
+  .summary-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .summary-header p { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+
+  .summary-body { padding: 1.75rem 2rem; }
+
+  .summary-row {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .sum-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-light);
+    width: 110px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .sum-value { font-size: 0.9rem; color: var(--text-mid); flex: 1; line-height: 1.6; }
+
+  .sum-value strong { color: var(--teal-dark); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 03</span>
+    <div class="section-badge">🛠️ Practical Tool</div>
+    <h1>Design Your First<br><em>City Intelligence Intervention</em></h1>
+    <p>A seven-step process for turning CII insight into your first intelligent move — structured, sequenced, and ready to act.</p>
+  </div>
+</header>
+
+<main>
+  <div class="progress-track">
+    <button class="prog-step active" onclick="goTo(0)"><span class="step-num">1</span>Pillar</button>
+    <button class="prog-step" onclick="goTo(1)"><span class="step-num">2</span>Signal</button>
+    <button class="prog-step" onclick="goTo(2)"><span class="step-num">3</span>Risk</button>
+    <button class="prog-step" onclick="goTo(3)"><span class="step-num">4</span>First move</button>
+    <button class="prog-step" onclick="goTo(4)"><span class="step-num">5</span>Spillovers</button>
+    <button class="prog-step" onclick="goTo(5)"><span class="step-num">6</span>Sequence</button>
+    <button class="prog-step" onclick="goTo(6)"><span class="step-num">7</span>Summary</button>
+  </div>
+
+  <!-- STEP 1: Choose a pillar -->
+  <div class="step-panel active" id="sp0">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">1</div>
+        <div><h2>Choose your pillar</h2><p>Which dimension of your city's intelligence needs most urgent attention?</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Why this matters:</strong> The CII has six pillars. Your intervention will be most powerful if it targets the pillar where your city is most constrained — because weak pillars create cascading pressure across the whole system.</div>
+        <div class="pillar-pick-grid">
+          <div class="pillar-pick" onclick="selectPillar(this, 'Foundational')">
+            <span class="pick-icon">🌱</span>
+            <div><div class="pick-name">Foundational</div><div class="pick-q">Education, trust, digital access</div></div>
+          </div>
+          <div class="pillar-pick" onclick="selectPillar(this, 'Innovator')">
+            <span class="pick-icon">💡</span>
+            <div><div class="pick-name">Innovator</div><div class="pick-q">R&D, entrepreneurship, new value</div></div>
+          </div>
+          <div class="pillar-pick" onclick="selectPillar(this, 'Integrator')">
+            <span class="pick-icon">🔗</span>
+            <div><div class="pick-name">Integrator</div><div class="pick-q">Cross-sector coordination</div></div>
+          </div>
+          <div class="pillar-pick" onclick="selectPillar(this, 'Regenerative')">
+            <span class="pick-icon">♻️</span>
+            <div><div class="pick-name">Regenerative</div><div class="pick-q">Sustainability, circular economy</div></div>
+          </div>
+          <div class="pillar-pick" onclick="selectPillar(this, 'Connected')">
+            <span class="pick-icon">🌐</span>
+            <div><div class="pick-name">Connected</div><div class="pick-q">Global networks, knowledge flows</div></div>
+          </div>
+          <div class="pillar-pick" onclick="selectPillar(this, 'Healthy Society')">
+            <span class="pick-icon">❤️</span>
+            <div><div class="pick-name">Healthy Society</div><div class="pick-q">Health, dignity, belonging</div></div>
+          </div>
+        </div>
+        <div class="nav-btns"><button class="btn-next" onclick="goTo(1)">Next: Identify the signal →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Identify the signal -->
+  <div class="step-panel" id="sp1">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">2</div>
+        <div><h2>Identify the signal</h2><p>Not the symptom — the signal that reveals what the system is actually doing.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Remember:</strong> Intelligent cities don't respond to symptoms — they read the patterns beneath them. A pothole is a symptom. Declining maintenance budgets, eroding civic trust, and fragmented asset management are the signals.</div>
+        <p class="field-label">What type of signal are you working with?</p>
+        <div class="signal-types">
+          <button class="signal-type" onclick="pickSignalType(this, 'weak')">Weak signal (emerging)</button>
+          <button class="signal-type" onclick="pickSignalType(this, 'pattern')">Pattern (developing)</button>
+          <button class="signal-type" onclick="pickSignalType(this, 'systemic')">Systemic signal (structural)</button>
+        </div>
+        <p class="field-label">Describe the signal you are responding to</p>
+        <textarea class="work-field" id="f_signal" placeholder="What are you observing? What pattern is it part of? Who is experiencing it and how?"></textarea>
+        <p class="field-label">What is the pattern behind this signal?</p>
+        <textarea class="work-field" id="f_pattern" placeholder="What structural dynamic — feedback loop, systemic delay, or interdependency — is producing this signal?"></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goTo(0)">← Back</button>
+          <button class="btn-next" onclick="goTo(2)">Next: Assess the risk →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Risk of not acting -->
+  <div class="step-panel" id="sp2">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">3</div>
+        <div><h2>Assess the risk of not acting</h2><p>Understand what gets worse if this signal is ignored.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Systemic inertia is the enemy.</strong> The cost of not acting in complex urban systems is rarely linear — it compounds. A trust deficit ignored becomes a governance crisis. A weak signal missed becomes a systemic breakdown. What is at stake here?</div>
+        <p class="field-label">What happens to this pillar if nothing changes in the next 3 years?</p>
+        <textarea class="work-field" id="f_risk3" placeholder="Describe the trajectory — what gets worse, what feedback loops accelerate, what other pillars are affected..."></textarea>
+        <p class="field-label">Rate the urgency of acting on this signal</p>
+        <div class="risk-slider-wrap">
+          <label><span>Urgency level</span><span id="urgencyVal" style="color:var(--teal-dark)">5/10</span></label>
+          <input type="range" class="risk-slider" min="1" max="10" value="5" oninput="document.getElementById('urgencyVal').textContent = this.value + '/10'">
+          <div class="risk-labels"><span>Low — can wait</span><span>Urgent — act now</span></div>
+        </div>
+        <p class="field-label">Which other CII pillars would be affected if this signal is left unaddressed?</p>
+        <textarea class="work-field" id="f_spillrisk" placeholder="Name 2-3 other pillars and how they would be impacted by inaction..."></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goTo(1)">← Back</button>
+          <button class="btn-next" onclick="goTo(3)">Next: Define your first move →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: First intelligent move -->
+  <div class="step-panel" id="sp3">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">4</div>
+        <div><h2>Define your first intelligent move</h2><p>The smallest intervention that shifts the whole pattern.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Leverage, not scale.</strong> A First Intelligent Move is not the biggest possible action. It is the most precisely placed small action — the one that nudges the system toward a new pattern rather than reinforcing the existing one.</div>
+        <div class="move-examples">
+          <h4>What makes a move "intelligent"?</h4>
+          <ul>
+            <li>It targets the feedback loop, not just the visible symptom</li>
+            <li>It is small enough to implement quickly, but precise enough to matter</li>
+            <li>It creates measurable change in at least one system dynamic</li>
+            <li>It opens space for a larger second move — it is the first step of a sequence</li>
+            <li>It considers whose experience it changes first</li>
+          </ul>
+        </div>
+        <p class="field-label">Describe your First Intelligent Move</p>
+        <textarea class="work-field" id="f_move" placeholder="What is the specific action? What does it target — which feedback loop, which signal, which structural dynamic?"></textarea>
+        <p class="field-label">Why is this the right size and the right place to start?</p>
+        <textarea class="work-field" id="f_moverationale" placeholder="Why this intervention, at this point in the system, at this moment? What makes it a lever rather than a patch?"></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goTo(2)">← Back</button>
+          <button class="btn-next" onclick="goTo(4)">Next: Map spillovers →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: Spillover effects -->
+  <div class="step-panel" id="sp4">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">5</div>
+        <div><h2>Map the spillovers</h2><p>Where will the effects of your move ripple through the system?</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Unintended consequences are not accidents — they are systemic outputs of insufficient foresight.</strong> Before acting, map where your move will create second-order effects — positive and negative — across the city system.</div>
+        <p class="field-label">Positive spillovers — where will your move create beneficial effects beyond the primary target?</p>
+        <textarea class="work-field" id="f_positive" placeholder="Which other systems or communities will benefit? What feedback loops might be positively influenced?"></textarea>
+        <p class="field-label">Negative or unintended effects — where could your move cause harm or backfire?</p>
+        <textarea class="work-field" id="f_negative" placeholder="Who might be disadvantaged? Which system dynamics could you accidentally reinforce? What might get worse before it gets better?"></textarea>
+        <p class="field-label">What would you monitor to catch unintended effects early?</p>
+        <textarea class="work-field" id="f_monitor" placeholder="What signals, metrics, or observations would tell you that the intervention is producing unintended consequences?"></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goTo(3)">← Back</button>
+          <button class="btn-next" onclick="goTo(5)">Next: Sequence for impact →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6: Sequence -->
+  <div class="step-panel" id="sp5">
+    <div class="step-card">
+      <div class="step-card-header">
+        <div class="step-number-circle">6</div>
+        <div><h2>Sequence for impact</h2><p>What comes after the first move — and how do you sustain momentum?</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="context-block"><strong>Sequencing is strategy.</strong> Cities fail not because of bad ideas, but because of the wrong order. A first intelligent move creates the conditions for a second — and a second creates conditions for a third. Timing shapes impact.</div>
+        <p class="field-label">What is Move 2? What does your first move make possible?</p>
+        <textarea class="work-field" id="f_move2" placeholder="Once your first move has begun to shift the system, what is the natural next step? What capacity or condition will you have created?"></textarea>
+        <p class="field-label">What is the critical timeline — when must this sequence begin?</p>
+        <textarea class="work-field" id="f_timeline" placeholder="Are there windows of opportunity, political cycles, seasonal dynamics, or system delays to account for?"></textarea>
+        <p class="field-label">Who needs to be involved, and in what order?</p>
+        <textarea class="work-field" id="f_actors" placeholder="Which actors, institutions, or communities must be engaged at each stage? Who has the power to enable or block?"></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goTo(4)">← Back</button>
+          <button class="btn-next" onclick="buildSummary()">Build my intervention plan →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7: Summary -->
+  <div class="step-panel" id="sp6">
+    <div class="summary-card">
+      <div class="summary-header">
+        <h2>Your City Intelligence Intervention Plan</h2>
+        <p>A strategic brief — built on systems thinking, designed for action.</p>
+      </div>
+      <div class="summary-body" id="summaryBody">
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let pillarChoice = '';
+  let signalTypeChoice = '';
+  let currentStep = 0;
+
+  function goTo(n) {
+    document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === n));
+    document.querySelectorAll('.prog-step').forEach((b, i) => {
+      b.classList.toggle('active', i === n);
+      b.classList.toggle('done', i < n);
+    });
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectPillar(el, name) {
+    document.querySelectorAll('.pillar-pick').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    pillarChoice = name;
+  }
+
+  function pickSignalType(el, type) {
+    document.querySelectorAll('.signal-type').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    signalTypeChoice = type;
+  }
+
+  function buildSummary() {
+    const signal = document.getElementById('f_signal').value || '—';
+    const pattern = document.getElementById('f_pattern').value || '—';
+    const risk3 = document.getElementById('f_risk3').value || '—';
+    const move = document.getElementById('f_move').value || '—';
+    const moveR = document.getElementById('f_moverationale').value || '—';
+    const positive = document.getElementById('f_positive').value || '—';
+    const negative = document.getElementById('f_negative').value || '—';
+    const monitor = document.getElementById('f_monitor').value || '—';
+    const move2 = document.getElementById('f_move2').value || '—';
+    const timeline = document.getElementById('f_timeline').value || '—';
+    const actors = document.getElementById('f_actors').value || '—';
+
+    document.getElementById('summaryBody').innerHTML = `
+      <div class="summary-row"><div class="sum-label">CII Pillar</div><div class="sum-value"><strong>${pillarChoice || 'Not selected'}</strong></div></div>
+      <div class="summary-row"><div class="sum-label">Signal</div><div class="sum-value">${signal}</div></div>
+      <div class="summary-row"><div class="sum-label">Pattern behind it</div><div class="sum-value">${pattern}</div></div>
+      <div class="summary-row"><div class="sum-label">Risk of inaction</div><div class="sum-value">${risk3}</div></div>
+      <div class="summary-row"><div class="sum-label">First move</div><div class="sum-value"><strong>${move}</strong></div></div>
+      <div class="summary-row"><div class="sum-label">Why this move</div><div class="sum-value">${moveR}</div></div>
+      <div class="summary-row"><div class="sum-label">Positive spillovers</div><div class="sum-value">${positive}</div></div>
+      <div class="summary-row"><div class="sum-label">Risks to watch</div><div class="sum-value">${negative}</div></div>
+      <div class="summary-row"><div class="sum-label">What to monitor</div><div class="sum-value">${monitor}</div></div>
+      <div class="summary-row"><div class="sum-label">Move 2</div><div class="sum-value">${move2}</div></div>
+      <div class="summary-row"><div class="sum-label">Timeline</div><div class="sum-value">${timeline}</div></div>
+      <div class="summary-row"><div class="sum-label">Key actors</div><div class="sum-value">${actors}</div></div>
+    `;
+    goTo(6);
+  }
+</script>
+</body>
+</html>

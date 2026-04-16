@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City Intelligence Index: The Six Pillars</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1D9E75;
+    --teal-dark: #0F6E56;
+    --teal-deep: #04342C;
+    --teal-light: #E1F5EE;
+    --teal-pale: #F2FBF7;
+    --amber: #EF9F27;
+    --amber-pale: #FAEEDA;
+    --amber-dark: #BA7517;
+    --purple: #534AB7;
+    --purple-pale: #EEEDFE;
+    --purple-dark: #3C3489;
+    --blue: #185FA5;
+    --blue-pale: #E6F1FB;
+    --coral: #D85A30;
+    --coral-pale: #FAECE7;
+    --green: #3B6D11;
+    --green-pale: #EAF3DE;
+    --pink: #993556;
+    --pink-pale: #FBEAF0;
+    --text-dark: #1A1A1A;
+    --text-mid: #444;
+    --text-light: #888;
+    --bg: #F8F9F6;
+    --white: #fff;
+    --border: rgba(0,0,0,0.08);
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--teal-deep);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 30px,
+      rgba(255,255,255,0.015) 30px,
+      rgba(255,255,255,0.015) 60px
+    );
+  }
+
+  .header-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 1rem; display: block; font-weight: 500; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.7rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: #9FE1CB; }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.95rem; font-weight: 300; max-width: 520px; }
+
+  .cii-wheel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 1.5rem 2rem;
+    background: rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 2rem;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .wheel-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+
+  .wheel-pill:nth-child(1) { background: rgba(29,158,117,0.2); color: #9FE1CB; }
+  .wheel-pill:nth-child(2) { background: rgba(239,159,39,0.2); color: #FAC775; }
+  .wheel-pill:nth-child(3) { background: rgba(83,74,183,0.2); color: #AFA9EC; }
+  .wheel-pill:nth-child(4) { background: rgba(59,109,17,0.2); color: #C0DD97; }
+  .wheel-pill:nth-child(5) { background: rgba(24,95,165,0.2); color: #85B7EB; }
+  .wheel-pill:nth-child(6) { background: rgba(153,53,86,0.2); color: #ED93B1; }
+
+  .wheel-pill.active { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.15); color: #fff; }
+
+  main { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .pillar-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 580px) { .pillar-overview { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 380px) { .pillar-overview { grid-template-columns: 1fr; } }
+
+  .pillar-mini {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .pillar-mini:hover { transform: translateY(-2px); }
+
+  .pillar-mini.selected { border-width: 2px; }
+  .pillar-mini:nth-child(1).selected { border-color: var(--teal); background: var(--teal-light); }
+  .pillar-mini:nth-child(2).selected { border-color: var(--amber); background: var(--amber-pale); }
+  .pillar-mini:nth-child(3).selected { border-color: var(--purple); background: var(--purple-pale); }
+  .pillar-mini:nth-child(4).selected { border-color: var(--green); background: var(--green-pale); }
+  .pillar-mini:nth-child(5).selected { border-color: var(--blue); background: var(--blue-pale); }
+  .pillar-mini:nth-child(6).selected { border-color: var(--pink); background: var(--pink-pale); }
+
+  .pillar-icon { font-size: 26px; margin-bottom: 6px; }
+  .pillar-mini-name { font-size: 0.8rem; font-weight: 500; color: var(--text-mid); }
+
+  .pillar-detail {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    display: none;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pillar-detail.show { display: block; }
+
+  .pillar-detail-header {
+    padding: 1.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .pillar-icon-big {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .pillar-detail-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .pillar-detail-header p { font-size: 0.87rem; margin-top: 4px; opacity: 0.75; }
+
+  .pillar-body { padding: 0 2rem 2rem; }
+
+  .pillar-section { margin-bottom: 1.5rem; }
+  .pillar-section h4 { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.75rem; }
+
+  .indicator-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .indicator-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 400;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-mid);
+  }
+
+  .pillar-insights {
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.87rem;
+    line-height: 1.7;
+    color: var(--text-mid);
+    margin-bottom: 1rem;
+  }
+
+  .pillar-insight-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+
+  .insight-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 8px;
+  }
+
+  .connections-strip {
+    background: var(--bg);
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .connections-strip h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.75rem; font-weight: 500; }
+
+  .connections-strip p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+  .progress-section {
+    margin-top: 2.5rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+  }
+
+  .progress-section h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1.25rem; color: var(--text-dark); }
+
+  .pillar-score-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .score-label { font-size: 0.82rem; color: var(--text-mid); width: 150px; flex-shrink: 0; }
+
+  .score-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.6s ease;
+  }
+
+  .score-input {
+    width: 50px;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    text-align: center;
+    color: var(--text-dark);
+    background: var(--bg);
+    outline: none;
+  }
+
+  .score-input:focus { border-color: var(--teal); background: #fff; }
+
+  .score-interpret {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    border: 1px solid var(--border);
+    display: none;
+  }
+
+  .score-interpret.show { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 03</span>
+    <div class="section-badge">📖 Bonus Material</div>
+    <h1>City Intelligence Index:<br><em>The Six Pillars</em></h1>
+    <p>A deep-dive reference on the diagnostic framework at the heart of urban intelligence thinking. Understand each pillar, its indicators, and how they interact.</p>
+  </div>
+  <nav class="cii-wheel" role="tablist">
+    <span class="wheel-pill" onclick="selectPillar(0, this)">Foundational</span>
+    <span class="wheel-pill" onclick="selectPillar(1, this)">Innovator</span>
+    <span class="wheel-pill" onclick="selectPillar(2, this)">Integrator</span>
+    <span class="wheel-pill" onclick="selectPillar(3, this)">Regenerative</span>
+    <span class="wheel-pill" onclick="selectPillar(4, this)">Connected</span>
+    <span class="wheel-pill" onclick="selectPillar(5, this)">Healthy Society</span>
+  </nav>
+</header>
+
+<main>
+  <div class="pillar-overview" id="pillarGrid">
+    <div class="pillar-mini" onclick="selectPillar(0, null)">
+      <div class="pillar-icon">🌱</div>
+      <div class="pillar-mini-name">Foundational Intelligence</div>
+    </div>
+    <div class="pillar-mini" onclick="selectPillar(1, null)">
+      <div class="pillar-icon">💡</div>
+      <div class="pillar-mini-name">Innovator Intelligence</div>
+    </div>
+    <div class="pillar-mini" onclick="selectPillar(2, null)">
+      <div class="pillar-icon">🔗</div>
+      <div class="pillar-mini-name">Integrator Intelligence</div>
+    </div>
+    <div class="pillar-mini" onclick="selectPillar(3, null)">
+      <div class="pillar-icon">♻️</div>
+      <div class="pillar-mini-name">Regenerative Intelligence</div>
+    </div>
+    <div class="pillar-mini" onclick="selectPillar(4, null)">
+      <div class="pillar-icon">🌐</div>
+      <div class="pillar-mini-name">Connected Intelligence</div>
+    </div>
+    <div class="pillar-mini" onclick="selectPillar(5, null)">
+      <div class="pillar-icon">❤️</div>
+      <div class="pillar-mini-name">Healthy Society Intelligence</div>
+    </div>
+  </div>
+
+  <div class="pillar-detail" id="pillarDetail"></div>
+
+  <div class="progress-section">
+    <h3>How does your city score?</h3>
+    <p style="font-size:0.87rem; color: var(--text-light); margin-bottom:1.5rem;">Rate your city on each pillar from 1 (very weak) to 10 (excellent). The bars update as you type.</p>
+
+    <div class="pillar-score-row">
+      <span class="score-label">🌱 Foundational</span>
+      <div class="score-track"><div class="score-fill" id="fill0" style="width:0%; background:#1D9E75;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(0, this.value)">
+    </div>
+    <div class="pillar-score-row">
+      <span class="score-label">💡 Innovator</span>
+      <div class="score-track"><div class="score-fill" id="fill1" style="width:0%; background:#EF9F27;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(1, this.value)">
+    </div>
+    <div class="pillar-score-row">
+      <span class="score-label">🔗 Integrator</span>
+      <div class="score-track"><div class="score-fill" id="fill2" style="width:0%; background:#534AB7;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(2, this.value)">
+    </div>
+    <div class="pillar-score-row">
+      <span class="score-label">♻️ Regenerative</span>
+      <div class="score-track"><div class="score-fill" id="fill3" style="width:0%; background:#3B6D11;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(3, this.value)">
+    </div>
+    <div class="pillar-score-row">
+      <span class="score-label">🌐 Connected</span>
+      <div class="score-track"><div class="score-fill" id="fill4" style="width:0%; background:#185FA5;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(4, this.value)">
+    </div>
+    <div class="pillar-score-row">
+      <span class="score-label">❤️ Healthy Society</span>
+      <div class="score-track"><div class="score-fill" id="fill5" style="width:0%; background:#993556;"></div></div>
+      <input type="number" class="score-input" min="1" max="10" placeholder="—" oninput="updateScore(5, this.value)">
+    </div>
+
+    <div class="score-interpret" id="scoreInterpret"></div>
+  </div>
+</main>
+
+<script>
+const pillars = [
+  {
+    icon: '🌱',
+    name: 'Foundational Intelligence',
+    tagline: 'The capacity to participate',
+    color: '#0F6E56',
+    bg: '#E1F5EE',
+    textColor: '#085041',
+    dotColor: '#1D9E75',
+    definition: 'Foundational intelligence examines the baseline human capacities that make all other urban intelligence possible. It asks: can residents actually participate in the city\'s life? Without foundation, all other pillars hollow out.',
+    indicators: ['Education attainment and literacy rates', 'Digital access and skills', 'Institutional trust levels', 'Civic participation rates', 'Language and cultural inclusion'],
+    insights: [
+      { text: 'Foundational intelligence is where all other pillars draw their energy. A city with weak foundational capacity will underperform across all other pillars, regardless of its infrastructure or innovation investment.' },
+      { text: 'Low institutional trust is the single most dangerous foundational weakness. When citizens don\'t trust the institutions that govern them, feedback loops collapse — the city loses its ability to learn and adapt.' },
+      { text: 'Digital access is no longer optional. A city with structural digital exclusion is a city that has already created a two-tier participation reality — regardless of how sophisticated its "smart city" infrastructure appears.' }
+    ],
+    connections: 'Foundational intelligence underpins all other pillars — a city cannot build Innovator or Connected intelligence on a fragile foundation. The most common failure pattern: investing heavily in digital infrastructure while foundational trust and participation remain broken.'
+  },
+  {
+    icon: '💡',
+    name: 'Innovator Intelligence',
+    tagline: 'The capacity to generate new value',
+    color: '#BA7517',
+    bg: '#FAEEDA',
+    textColor: '#633806',
+    dotColor: '#EF9F27',
+    definition: 'Innovator intelligence measures a city\'s ability to generate, absorb, and apply new ideas, technologies, and economic models. It is not about having a "startup scene" — it is about whether the city\'s systems can evolve.',
+    indicators: ['R&D investment as % of GDP', 'Patent applications and knowledge creation', 'Presence of universities and research institutions', 'Entrepreneurship and business formation rates', 'Cross-sector collaboration infrastructure'],
+    insights: [
+      { text: 'Innovation in cities is systemic, not sectoral. A technology hub surrounded by fragile social infrastructure will generate economic value for some and increase inequality for others — until the foundation collapses.' },
+      { text: 'The most valuable form of urban innovation is governance innovation: new ways for the city to make decisions, gather feedback, and adapt. Most "smart city" programmes ignore this entirely.' },
+      { text: 'Cities with strong innovator intelligence invest in failure. They create the infrastructure for experimentation — pilot programmes, civic sandboxes, policy learning cycles. Innovation without learning infrastructure is just spending.' }
+    ],
+    connections: 'Innovator intelligence requires Foundational intelligence to function. Without skilled, trusting, participatory citizens, innovation becomes an elite sport. It also depends on Integrator intelligence — innovation ecosystems die in silos.'
+  },
+  {
+    icon: '🔗',
+    name: 'Integrator Intelligence',
+    tagline: 'The capacity to work across boundaries',
+    color: '#3C3489',
+    bg: '#EEEDFE',
+    textColor: '#26215C',
+    dotColor: '#7F77DD',
+    definition: 'Integrator intelligence measures a city\'s ability to coordinate across sectors, departments, scales, and stakeholder groups. It is the governance intelligence that prevents silo failure — the most common cause of urban system breakdown.',
+    indicators: ['Cross-departmental data sharing', 'Multi-level governance coordination', 'Public-private-civil society partnerships', 'Integrated policy planning', 'Citizen co-design capacity'],
+    insights: [
+      { text: 'Urban problems are almost never single-system problems. Mobility, housing, health, and education are permanently intertwined. A city without integrator intelligence treats symptoms in silos — and produces unintended consequences at scale.' },
+      { text: 'Integrator intelligence is the most politically difficult pillar to build. It requires agencies and departments to relinquish control, share credit, and accept that the boundaries of their mandates are artificial.' },
+      { text: 'The most powerful integrator intelligence tool is shared data infrastructure. When mobility, housing, health, and environmental data can be seen together, patterns emerge that are invisible in any single system.' }
+    ],
+    connections: 'Integrator intelligence is the connective tissue of the CII. Without it, even strong foundational and innovator capacities remain fragmented. Cities with high integration often show 20–30% better outcomes on complex challenges than cities with equal resources but low integration.'
+  },
+  {
+    icon: '♻️',
+    name: 'Regenerative Intelligence',
+    tagline: 'The capacity to renew without depleting',
+    color: '#27500A',
+    bg: '#EAF3DE',
+    textColor: '#173404',
+    dotColor: '#639922',
+    definition: 'Regenerative intelligence measures whether a city\'s growth model is creating or consuming its future capacity. It goes beyond sustainability to ask: is this city building the conditions for its own long-term flourishing?',
+    indicators: ['Renewable energy penetration', 'Circular economy infrastructure', 'Biodiversity and green space metrics', 'Carbon trajectory', 'Community wealth building practices'],
+    insights: [
+      { text: 'Regenerative intelligence reframes the environmental question: it is not about compliance with climate targets, but about whether the city is building or eroding its adaptive capacity for the future.' },
+      { text: 'The circular economy is one of the most powerful levers for regenerative intelligence — but it requires integrated governance to work. Cities that treat it as waste management miss 90% of its potential.' },
+      { text: 'Urban biodiversity is not a luxury metric. Green infrastructure reduces heat island effects, improves mental health outcomes, and increases property values — it is a multiplier across other CII pillars.' }
+    ],
+    connections: 'Regenerative intelligence connects directly to Healthy Society intelligence — environmental quality is health infrastructure. It also requires Integrator intelligence, since no single agency owns "regeneration". The most regenerative cities are also the most integrated.'
+  },
+  {
+    icon: '🌐',
+    name: 'Connected Intelligence',
+    tagline: 'The capacity to learn from and contribute to the world',
+    color: '#0C447C',
+    bg: '#E6F1FB',
+    textColor: '#042C53',
+    dotColor: '#378ADD',
+    definition: 'Connected intelligence measures how well a city participates in global knowledge flows, networks, and collaborative systems. Disconnected cities cannot import solutions or export lessons — they are isolated in a networked world.',
+    indicators: ['International partnerships and networks', 'Diplomatic presence and soft power', 'Global talent attraction and retention', 'Knowledge exchange platforms', 'Digital and transport connectivity'],
+    insights: [
+      { text: 'Connected intelligence is not about prestige — it is about access to learning. Cities with strong international connections adapt faster because they can observe, borrow, and adapt solutions from elsewhere.' },
+      { text: 'The most undervalued dimension of connected intelligence is diaspora networks. Cities with strong diaspora connections gain access to global capital, knowledge, and market access that no formal diplomatic programme can replicate.' },
+      { text: 'Digital connectivity and physical connectivity reinforce each other. A city with excellent broadband but poor airport infrastructure, or vice versa, will find its connected intelligence constrained at the bottleneck.' }
+    ],
+    connections: 'Connected intelligence amplifies all other pillars. It gives Innovator intelligence access to global knowledge; it gives Integrator intelligence models from other cities; it gives Foundational intelligence global best practices in civic participation.'
+  },
+  {
+    icon: '❤️',
+    name: 'Healthy Society Intelligence',
+    tagline: 'The capacity to sustain human dignity and belonging',
+    color: '#72243E',
+    bg: '#FBEAF0',
+    textColor: '#4B1528',
+    dotColor: '#D4537E',
+    definition: 'Healthy society intelligence measures the city\'s capacity to sustain the physical, mental, and social health of all its residents — with equity at the centre. It is the ultimate output measure: is the city working for human flourishing?',
+    indicators: ['Mental health services and outcomes', 'Social cohesion and belonging indices', 'Health inequality metrics', 'Access to green and civic space', 'Safety and dignity indicators'],
+    insights: [
+      { text: 'Healthy society intelligence is where all other pillars converge. It is the ultimate measure of whether a city\'s intelligence is actually serving people — or serving systems for their own sake.' },
+      { text: 'Mental health is the most underinvested dimension of urban intelligence. Cities that treat mental health as a social services issue rather than a systemic infrastructure issue miss the compounding returns of collective wellbeing.' },
+      { text: '"Dignity" is a measurable urban asset. When residents feel their presence, culture, and belonging are respected by the city, civic participation rises, community resilience increases, and the social immune system strengthens.' }
+    ],
+    connections: 'Healthy society intelligence is the final pillar but arguably the first purpose. It justifies all other CII investment. Cities should ask: are all our other pillars ultimately producing better health, safety, dignity, and belonging for all residents?'
+  }
+];
+
+let activePillar = null;
+
+function selectPillar(index, pillBtn) {
+  document.querySelectorAll('.pillar-mini').forEach((m, i) => m.classList.toggle('selected', i === index));
+  document.querySelectorAll('.wheel-pill').forEach((p, i) => p.classList.toggle('active', i === index));
+
+  if (activePillar === index) {
+    activePillar = null;
+    document.getElementById('pillarDetail').classList.remove('show');
+    return;
+  }
+
+  activePillar = index;
+  const p = pillars[index];
+
+  const insightsHtml = p.insights.map(ins => `
+    <div class="pillar-insight-item">
+      <span class="insight-dot" style="background:${p.dotColor}"></span>
+      <span>${ins.text}</span>
+    </div>
+  `).join('');
+
+  const indicatorsHtml = p.indicators.map(ind => `<span class="indicator-chip">${ind}</span>`).join('');
+
+  document.getElementById('pillarDetail').innerHTML = `
+    <div class="pillar-detail-header" style="background:${p.bg}">
+      <div class="pillar-icon-big" style="background:${p.color}20">${p.icon}</div>
+      <div>
+        <h2 style="color:${p.color}">${p.name}</h2>
+        <p style="color:${p.textColor}">${p.tagline}</p>
+      </div>
+    </div>
+    <div class="pillar-body">
+      <div class="pillar-section">
+        <h4>What it measures</h4>
+        <p style="font-size:0.9rem; color:var(--text-mid); line-height:1.7">${p.definition}</p>
+      </div>
+      <div class="pillar-section">
+        <h4>Key indicators</h4>
+        <div class="indicator-list">${indicatorsHtml}</div>
+      </div>
+      <div class="pillar-section">
+        <h4>Strategic insights</h4>
+        <div class="pillar-insights" style="background:${p.bg}">${insightsHtml}</div>
+      </div>
+    </div>
+    <div class="connections-strip">
+      <h4>Connections to other pillars</h4>
+      <p>${p.connections}</p>
+    </div>
+  `;
+
+  document.getElementById('pillarDetail').classList.add('show');
+  document.getElementById('pillarDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+const scoreColors = ['#1D9E75','#EF9F27','#534AB7','#3B6D11','#185FA5','#993556'];
+const scores = [null, null, null, null, null, null];
+
+function updateScore(index, val) {
+  const v = Math.min(10, Math.max(1, parseInt(val) || 0));
+  scores[index] = v;
+  document.getElementById('fill' + index).style.width = (v * 10) + '%';
+  checkAllScores();
+}
+
+function checkAllScores() {
+  const filled = scores.filter(s => s !== null);
+  if (filled.length < 3) return;
+  const avg = filled.reduce((a, b) => a + b, 0) / filled.length;
+  const min = Math.min(...filled);
+  const minPillar = ['Foundational', 'Innovator', 'Integrator', 'Regenerative', 'Connected', 'Healthy Society'][scores.indexOf(min)];
+  const interpret = document.getElementById('scoreInterpret');
+  interpret.innerHTML = `<strong>Your snapshot:</strong> Average score ${avg.toFixed(1)}/10. Your most urgent focus area is likely <strong>${minPillar} Intelligence</strong> — the CII is only as strong as its weakest pillar. A score of ${min}/10 here will constrain progress across all other pillars.`;
+  interpret.classList.add('show');
+}
+</script>
+</body>
+</html>
