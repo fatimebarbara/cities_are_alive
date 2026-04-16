@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrating the City Intelligence Lens into Your Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --purple: #534AB7; --purple-pale: #EEEDFE; --purple-dark: #3C3489;
+    --blue: #185FA5; --blue-pale: #E6F1FB;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F9F6; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--teal-dark);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); }
+  .header-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 1rem; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,4vw,2.6rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: #9FE1CB; }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.95rem; font-weight: 300; max-width: 500px; }
+
+  main { max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .context-banner {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--teal);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.9rem;
+    color: var(--text-mid);
+  }
+  .context-banner strong { color: var(--teal-dark); }
+
+  .domain-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .domain-btn {
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .domain-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .domain-btn.active { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; font-weight: 500; }
+
+  .domain-panel { display: none; animation: fadeIn 0.3s ease; }
+  .domain-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .integration-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 520px) { .integration-row { grid-template-columns: 1fr; } }
+
+  .int-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.3rem;
+  }
+
+  .int-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+
+  .int-icon { font-size: 18px; }
+  .int-title { font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
+
+  .int-card ul { padding-left: 1rem; }
+  .int-card li { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 5px; line-height: 1.5; }
+
+  .int-card.accent-teal { border-top: 3px solid var(--teal); }
+  .int-card.accent-purple { border-top: 3px solid var(--purple); }
+  .int-card.accent-amber { border-top: 3px solid var(--amber); }
+  .int-card.accent-blue { border-top: 3px solid var(--blue); }
+
+  .domain-full-width {
+    grid-column: 1 / -1;
+  }
+
+  .lens-table {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border-collapse: collapse;
+  }
+
+  .lens-table th {
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .lens-table th:nth-child(1) { color: var(--text-light); }
+  .lens-table th:nth-child(2) { color: var(--coral-dark, #993C1D); background: #FAECE7; }
+  .lens-table th:nth-child(3) { color: var(--teal-dark); background: var(--teal-light); }
+
+  .lens-table td {
+    padding: 10px 14px;
+    font-size: 0.84rem;
+    border-top: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .lens-table td:nth-child(1) { font-weight: 500; color: var(--text-mid); font-size: 0.8rem; }
+  .lens-table td:nth-child(2) { background: #FAECE7; color: #7a3322; }
+  .lens-table td:nth-child(3) { background: var(--teal-pale); color: var(--teal-dark); }
+
+  .habits-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+
+  .habits-header {
+    background: var(--teal-deep);
+    padding: 1.5rem 2rem;
+    color: #fff;
+  }
+
+  .habits-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .habits-header p { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+
+  .habits-body { padding: 1.5rem 2rem; }
+
+  .habit-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .habit-item:last-child { border-bottom: none; }
+
+  .habit-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    font-size: 13px;
+    color: transparent;
+    cursor: pointer;
+  }
+
+  .habit-item.checked .habit-check {
+    background: var(--teal-dark);
+    border-color: var(--teal-dark);
+    color: #fff;
+  }
+
+  .habit-text { flex: 1; }
+  .habit-title { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+  .habit-detail { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+
+  .habit-item.checked .habit-title { color: var(--teal-dark); text-decoration: line-through; text-decoration-color: rgba(29,158,117,0.4); }
+
+  .habit-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 0 0;
+  }
+
+  .habit-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--bg);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .habit-progress-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 6px;
+    transition: width 0.4s ease;
+  }
+
+  .habit-progress-label { font-size: 12px; color: var(--text-light); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 05</span>
+    <div class="section-badge">📖 Integration Guide</div>
+    <h1>Integrating the<br><em>City Intelligence Lens</em></h1>
+    <p>How to embed the frameworks, postures, and tools from this course into your daily work — and make them stick.</p>
+  </div>
+</header>
+
+<main>
+  <div class="context-banner">
+    <strong>The hardest part of any learning journey is what happens after it ends.</strong> This guide shows you how to carry the City Intelligence lens into the work you already do — not as extra effort, but as a new way of seeing what was always there.
+  </div>
+
+  <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:1rem;">Choose your primary role context to see how the lens applies to your specific work:</p>
+
+  <nav class="domain-selector" role="tablist">
+    <button class="domain-btn active" onclick="showDomain(0)">Policy & governance</button>
+    <button class="domain-btn" onclick="showDomain(1)">Urban planning</button>
+    <button class="domain-btn" onclick="showDomain(2)">Strategy & leadership</button>
+    <button class="domain-btn" onclick="showDomain(3)">Research & analysis</button>
+    <button class="domain-btn" onclick="showDomain(4)">Community work</button>
+  </nav>
+
+  <!-- POLICY & GOVERNANCE -->
+  <div class="domain-panel active" id="d0">
+    <table class="lens-table">
+      <thead><tr><th>Moment</th><th>Without the lens</th><th>With the lens</th></tr></thead>
+      <tbody>
+        <tr><td>Budget allocation</td><td>Fund the departments with the most political pressure</td><td>Invest in the CII pillars where your city is most constrained</td></tr>
+        <tr><td>Crisis response</td><td>Solve the presenting problem as fast as possible</td><td>Ask what pattern produced this crisis — and intervene there</td></tr>
+        <tr><td>Cross-department meetings</td><td>Defend your department's position</td><td>Look for the interdependence that makes isolated action impossible</td></tr>
+        <tr><td>Long-term planning</td><td>Project current trends forward</td><td>Map feedback loops and design for optionality, not prediction</td></tr>
+      </tbody>
+    </table>
+    <div class="integration-row">
+      <div class="int-card accent-teal">
+        <div class="int-card-header"><span class="int-icon">⚙️</span><span class="int-title">Integrate: Optimiser habits</span></div>
+        <ul>
+          <li>Before every budget decision, ask: what does the data say is actually changing?</li>
+          <li>Set at least one measurable metric for each major policy intervention</li>
+          <li>Build a quarterly review habit: are our metrics tracking the right things?</li>
+        </ul>
+      </div>
+      <div class="int-card accent-purple">
+        <div class="int-card-header"><span class="int-icon">🌉</span><span class="int-title">Integrate: Translator habits</span></div>
+        <ul>
+          <li>In every policy brief, include a section: "who is missing from this analysis?"</li>
+          <li>Designate one cross-departmental meeting per quarter to share data that doesn't normally travel</li>
+          <li>Rewrite one technical document per month into community language</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- URBAN PLANNING -->
+  <div class="domain-panel" id="d1">
+    <table class="lens-table">
+      <thead><tr><th>Moment</th><th>Without the lens</th><th>With the lens</th></tr></thead>
+      <tbody>
+        <tr><td>Site analysis</td><td>Map physical constraints and infrastructure</td><td>Map the flows, feedback loops, and emotional climate of the area</td></tr>
+        <tr><td>Community consultation</td><td>Communicate decisions and manage objections</td><td>Treat community knowledge as a primary data source for system understanding</td></tr>
+        <tr><td>Development impact assessment</td><td>Assess traffic, drainage, and capacity</td><td>Assess how the development will shift flows, trust, and interdependencies</td></tr>
+        <tr><td>Long-term masterplanning</td><td>Project growth and design for maximum efficiency</td><td>Design for adaptive capacity — leave optionality in the system</td></tr>
+      </tbody>
+    </table>
+    <div class="integration-row">
+      <div class="int-card accent-amber">
+        <div class="int-card-header"><span class="int-icon">🌿</span><span class="int-title">Steward questions for planners</span></div>
+        <ul>
+          <li>What does this plan lock in — and what does it foreclose?</li>
+          <li>Whose belonging and dignity are at stake in this redesign?</li>
+          <li>How will this place feel to the people who can't afford to choose to live elsewhere?</li>
+        </ul>
+      </div>
+      <div class="int-card accent-blue">
+        <div class="int-card-header"><span class="int-icon">👂</span><span class="int-title">Systems Listener check-ins</span></div>
+        <ul>
+          <li>Walk the site before reviewing the data — what do you feel that the data doesn't show?</li>
+          <li>Talk to the people who have been there longest — what have they noticed changing?</li>
+          <li>Notice what's absent — the uses, the people, the life that isn't there</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGY & LEADERSHIP -->
+  <div class="domain-panel" id="d2">
+    <table class="lens-table">
+      <thead><tr><th>Moment</th><th>Without the lens</th><th>With the lens</th></tr></thead>
+      <tbody>
+        <tr><td>Strategic planning</td><td>Set goals, allocate resources, measure delivery</td><td>Map the system dynamics that determine whether goals are achievable</td></tr>
+        <tr><td>Team conversations</td><td>Focus on outputs and timelines</td><td>Ask what patterns are being reinforced or broken by how the team works</td></tr>
+        <tr><td>Partnership development</td><td>Identify complementary capabilities</td><td>Identify where your organisation's intelligence gaps are — and partner to fill them</td></tr>
+        <tr><td>Organisational learning</td><td>Hold retrospectives after projects</td><td>Build continuous feedback loops — the organisation as a living system</td></tr>
+      </tbody>
+    </table>
+    <div class="integration-row">
+      <div class="int-card accent-teal">
+        <div class="int-card-header"><span class="int-icon">🔗</span><span class="int-title">CII as a leadership lens</span></div>
+        <ul>
+          <li>Diagnose your organisation through the six pillars: which is your weakest?</li>
+          <li>Where are your team's silos — and what intelligence is being lost?</li>
+          <li>Is your strategy creating optionality or locking your organisation into a path?</li>
+        </ul>
+      </div>
+      <div class="int-card accent-purple">
+        <div class="int-card-header"><span class="int-icon">🌿</span><span class="int-title">Stewardship in leadership</span></div>
+        <ul>
+          <li>Which decisions you're making today will still be felt in 10 years?</li>
+          <li>Who in your team needs protection from short-term pressure to do long-term work?</li>
+          <li>What institutional memory must you protect — and who carries it?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH & ANALYSIS -->
+  <div class="domain-panel" id="d3">
+    <table class="lens-table">
+      <thead><tr><th>Moment</th><th>Without the lens</th><th>With the lens</th></tr></thead>
+      <tbody>
+        <tr><td>Research design</td><td>Define variables and control for confounding</td><td>Map the system — identify feedback loops, interdependencies, and weak signals worth measuring</td></tr>
+        <tr><td>Data interpretation</td><td>Describe what the numbers show</td><td>Ask what structural dynamics are producing the patterns you see</td></tr>
+        <tr><td>Communicating findings</td><td>Publish for academic peers</td><td>Translate findings into the language of urban decision-makers who need them</td></tr>
+        <tr><td>Research gaps</td><td>What has not been quantified yet?</td><td>What is felt but not measured — where is the lived experience absent from the data?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COMMUNITY WORK -->
+  <div class="domain-panel" id="d4">
+    <table class="lens-table">
+      <thead><tr><th>Moment</th><th>Without the lens</th><th>With the lens</th></tr></thead>
+      <tbody>
+        <tr><td>Community organising</td><td>Build power around shared grievances</td><td>Map the systemic patterns producing those grievances — and target the leverage point</td></tr>
+        <tr><td>Engaging institutions</td><td>Make the case for your community's needs</td><td>Use the CII to show how your community's weakness is the city's intelligence failure</td></tr>
+        <tr><td>Building community capacity</td><td>Provide services and resources</td><td>Build foundational intelligence — the capacity to participate, advocate, and co-create</td></tr>
+        <tr><td>Documenting experience</td><td>Share stories of what your community faces</td><td>Position lived experience as urban intelligence that institutions cannot replicate</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAILY HABITS CHECKLIST -->
+  <div class="habits-section">
+    <div class="habits-header">
+      <h2>Daily integration habits</h2>
+      <p>Check off the habits you commit to embedding in your practice. These are the actions that make the lens stick.</p>
+    </div>
+    <div class="habits-body">
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">Before each meeting: ask what pattern the agenda item is part of</div>
+          <div class="habit-detail">Not "what is the problem?" but "what is producing this situation — and what would it look like to intervene in the pattern rather than the symptom?"</div>
+        </div>
+      </div>
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">Weekly: identify one weak signal you noticed but haven't formally processed</div>
+          <div class="habit-detail">A conversation, a behaviour, a change in tone. Write it down. Ask: what pattern might this be part of?</div>
+        </div>
+      </div>
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">Monthly: use the CII to audit one system or challenge you're working on</div>
+          <div class="habit-detail">Which pillar is most constrained? Where is the interdependence that others are ignoring? What would a First Intelligent Move look like?</div>
+        </div>
+      </div>
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">In decisions: always ask whose experience is absent from the room</div>
+          <div class="habit-detail">The Translator posture as a permanent habit. Before finalising any decision, name the missing perspectives — and either incorporate them or consciously document why you couldn't.</div>
+        </div>
+      </div>
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">Before big decisions: trace the path dependency</div>
+          <div class="habit-detail">What does this decision make permanently harder or permanently easier? In 10 years, will you wish you had kept options open here?</div>
+        </div>
+      </div>
+      <div class="habit-item" onclick="toggleHabit(this)">
+        <div class="habit-check">✓</div>
+        <div class="habit-text">
+          <div class="habit-title">Switch posture consciously — notice which one you're in</div>
+          <div class="habit-detail">Once a day, check: am I in Optimiser, Translator, Steward, or Systems Listener mode right now? Is that the mode this situation actually needs?</div>
+        </div>
+      </div>
+
+      <div class="habit-progress">
+        <div class="habit-progress-bar"><div class="habit-progress-fill" id="habitFill" style="width:0%"></div></div>
+        <span class="habit-progress-label" id="habitLabel">0 / 6 committed</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function showDomain(n) {
+    document.querySelectorAll('.domain-panel').forEach((p, i) => p.classList.toggle('active', i === n));
+    document.querySelectorAll('.domain-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+  }
+
+  function toggleHabit(item) {
+    item.classList.toggle('checked');
+    const total = document.querySelectorAll('.habit-item').length;
+    const checked = document.querySelectorAll('.habit-item.checked').length;
+    document.getElementById('habitFill').style.width = Math.round((checked / total) * 100) + '%';
+    document.getElementById('habitLabel').textContent = checked + ' / ' + total + ' committed';
+  }
+</script>
+</body>
+</html>

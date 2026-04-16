@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluate Your City Intelligence Approach</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #534AB7; --purple-dark: #3C3489; --purple-deep: #26215C;
+    --purple-pale: #EEEDFE; --purple-light: #CECBF6;
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-light: #E1F5EE;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --coral: #D85A30; --coral-pale: #FAECE7;
+    --blue: #185FA5; --blue-pale: #E6F1FB;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F8F5; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--purple-deep);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before { content: ''; position: absolute; top: -80px; right: -80px; width: 250px; height: 250px; border-radius: 50%; background: rgba(83,74,183,0.25); }
+  header::after { content: ''; position: absolute; bottom: -40px; left: 5%; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.03); }
+  .header-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 1rem; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,4vw,2.6rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: var(--purple-light); }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.95rem; font-weight: 300; max-width: 500px; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .intro-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+    border-left: 4px solid var(--purple);
+  }
+  .intro-card p { font-size: 0.9rem; color: var(--text-mid); }
+  .intro-card strong { color: var(--purple-dark); }
+
+  .assessment-phase { margin-bottom: 2.5rem; }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .phase-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .phase-label { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text-dark); }
+  .phase-sub { font-size: 0.83rem; color: var(--text-light); display: block; margin-top: -2px; }
+
+  .question-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .question-text {
+    padding: 1.1rem 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    font-weight: 400;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rating-row {
+    display: flex;
+    padding: 10px 1.25rem;
+    gap: 0;
+    align-items: center;
+  }
+
+  .rating-label-low { font-size: 11px; color: var(--text-light); margin-right: 10px; }
+  .rating-label-high { font-size: 11px; color: var(--text-light); margin-left: 10px; }
+
+  .rating-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin: 0 2px;
+  }
+  .rating-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .rating-btn.selected { background: var(--purple); border-color: var(--purple); color: #fff; font-weight: 500; }
+
+  .section-divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+  .results-panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    display: none;
+    animation: fadeUp 0.4s ease;
+  }
+  .results-panel.show { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .results-header {
+    background: var(--purple-deep);
+    padding: 1.75rem 2rem;
+    color: #fff;
+  }
+  .results-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
+  .results-header p { font-size: 0.85rem; opacity: 0.7; }
+
+  .results-body { padding: 2rem; }
+
+  .posture-result {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .pr-icon { font-size: 22px; width: 32px; text-align: center; }
+  .pr-name { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); width: 140px; flex-shrink: 0; }
+
+  .pr-bar-track {
+    flex: 1;
+    height: 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .pr-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pr-score { font-size: 13px; font-weight: 500; color: var(--text-mid); min-width: 32px; text-align: right; }
+
+  .profile-insight {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    border: 1px solid var(--border);
+  }
+
+  .profile-insight h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.75rem; }
+
+  .growth-strip {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--purple-pale);
+    border-radius: 12px;
+  }
+
+  .growth-strip h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--purple-dark); margin-bottom: 0.75rem; font-weight: 500; }
+
+  .growth-strip p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; }
+
+  .btn-assess {
+    width: 100%;
+    padding: 14px;
+    background: var(--purple-dark);
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 1rem;
+  }
+  .btn-assess:hover { background: var(--purple); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 04</span>
+    <div class="section-badge">🔍 Self-Assessment</div>
+    <h1>Evaluate Your<br><em>City Intelligence Approach</em></h1>
+    <p>A reflection-first instrument to discover your dominant postures, your underdeveloped ones, and where your growth edge lies.</p>
+  </div>
+</header>
+
+<main>
+  <div class="intro-card">
+    <p>This is not a test. There are no right answers. Rate each statement <strong>honestly</strong> — 1 means "this is not how I currently work" and 5 means "this describes me closely". The goal is self-knowledge, not a perfect score. The most valuable result is discovering which postures you <strong>underuse</strong>.</p>
+  </div>
+
+  <!-- OPTIMISER QUESTIONS -->
+  <div class="assessment-phase">
+    <div class="phase-header">
+      <div class="phase-num">⚙️</div>
+      <div>
+        <span class="phase-label">Optimiser</span>
+        <span class="phase-sub">How strongly do I operate in evidence-driven, efficiency-focused mode?</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="opt">
+      <div class="question-text">When facing an urban challenge, I instinctively reach for data and evidence before forming an opinion.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="opt">
+      <div class="question-text">I find it natural to set measurable targets and track whether interventions are working.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="opt">
+      <div class="question-text">I can identify inefficiencies in processes and propose evidence-based improvements without being asked.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- TRANSLATOR QUESTIONS -->
+  <div class="assessment-phase">
+    <div class="phase-header">
+      <div class="phase-num">🌉</div>
+      <div>
+        <span class="phase-label">Translator</span>
+        <span class="phase-sub">How naturally do I bridge difference, connect silos, and surface what data misses?</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="trans">
+      <div class="question-text">When I enter a stakeholder conversation, I notice who is absent and what perspective is missing.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="trans">
+      <div class="question-text">I can reframe technical findings in language that resonates with communities who don't use technical language.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="trans">
+      <div class="question-text">I actively work to connect people across institutional silos who have information that, together, would produce better decisions.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- STEWARD QUESTIONS -->
+  <div class="assessment-phase">
+    <div class="phase-header">
+      <div class="phase-num">🌿</div>
+      <div>
+        <span class="phase-label">Steward</span>
+        <span class="phase-sub">How consistently do I hold long-term thinking in short-term environments?</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="stew">
+      <div class="question-text">When a fast decision is being pushed through, I pause to ask what it forecloses for future generations.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="stew">
+      <div class="question-text">I make the case for protecting community dignity and belonging as measurable strategic assets, not just values.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="stew">
+      <div class="question-text">I regularly think about path dependency — how today's choices open or close tomorrow's options.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- SYSTEMS LISTENER QUESTIONS -->
+  <div class="assessment-phase">
+    <div class="phase-header">
+      <div class="phase-num">👂</div>
+      <div>
+        <span class="phase-label">Systems Listener</span>
+        <span class="phase-sub">How attuned am I to weak signals, patterns, and what data doesn't capture?</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="list">
+      <div class="question-text">I regularly notice weak signals — subtle shifts in behaviour, tone, or social patterns — before they become visible crises.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="list">
+      <div class="question-text">When I observe a behaviour, I instinctively ask what feedback loop or systemic dynamic is producing it.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+
+    <div class="question-block" data-posture="list">
+      <div class="question-text">I take qualitative and experiential data seriously — community mood, felt insecurity, collective emotion — as important system signals.</div>
+      <div class="rating-row">
+        <span class="rating-label-low">Rarely</span>
+        <button class="rating-btn" onclick="rate(this,1)">1</button>
+        <button class="rating-btn" onclick="rate(this,2)">2</button>
+        <button class="rating-btn" onclick="rate(this,3)">3</button>
+        <button class="rating-btn" onclick="rate(this,4)">4</button>
+        <button class="rating-btn" onclick="rate(this,5)">5</button>
+        <span class="rating-label-high">Always</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-assess" onclick="calcResults()">View my City Intelligence profile →</button>
+
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-header">
+      <h2>Your City Intelligence Profile</h2>
+      <p>Based on your self-assessment — remember, this is a starting point for honest reflection, not a verdict.</p>
+    </div>
+    <div class="results-body">
+      <div class="posture-result">
+        <span class="pr-icon">⚙️</span>
+        <span class="pr-name">Optimiser</span>
+        <div class="pr-bar-track"><div class="pr-bar-fill" id="bar-opt" style="background:var(--blue); width:0%"></div></div>
+        <span class="pr-score" id="score-opt">—</span>
+      </div>
+      <div class="posture-result">
+        <span class="pr-icon">🌉</span>
+        <span class="pr-name">Translator</span>
+        <div class="pr-bar-track"><div class="pr-bar-fill" id="bar-trans" style="background:var(--teal); width:0%"></div></div>
+        <span class="pr-score" id="score-trans">—</span>
+      </div>
+      <div class="posture-result">
+        <span class="pr-icon">🌿</span>
+        <span class="pr-name">Steward</span>
+        <div class="pr-bar-track"><div class="pr-bar-fill" id="bar-stew" style="background:var(--amber); width:0%"></div></div>
+        <span class="pr-score" id="score-stew">—</span>
+      </div>
+      <div class="posture-result">
+        <span class="pr-icon">👂</span>
+        <span class="pr-name">Systems Listener</span>
+        <div class="pr-bar-track"><div class="pr-bar-fill" id="bar-list" style="background:var(--coral); width:0%"></div></div>
+        <span class="pr-score" id="score-list">—</span>
+      </div>
+
+      <div class="profile-insight" id="profileInsight">
+        <h3 id="insightTitle"></h3>
+        <p id="insightBody"></p>
+      </div>
+
+      <div class="growth-strip">
+        <h4>Your growth edge</h4>
+        <p id="growthText"></p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const scores = { opt: [], trans: [], stew: [], list: [] };
+
+  function rate(btn, val) {
+    const block = btn.closest('.question-block');
+    block.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const posture = block.dataset.posture;
+    const allBlocks = [...document.querySelectorAll('.question-block[data-posture="' + posture + '"]')];
+    const idx = allBlocks.indexOf(block);
+    scores[posture][idx] = val;
+  }
+
+  const growthMessages = {
+    opt: 'Consider building your evidence-gathering and measurement muscles. Ask: what would the data say about this? Start setting measurable indicators for decisions you make this month.',
+    trans: 'Practice bridging. In your next three meetings, explicitly ask: who is missing from this room? Seek out one conversation with someone whose experience contradicts your current assumptions.',
+    stew: 'Invest in long-term thinking. Before your next major decision, trace its effects 10 and 30 years forward. Ask: what am I creating that cannot be undone?',
+    list: 'Cultivate the practice of noticing. Before checking dashboards, spend 10 minutes walking through a neighbourhood or reading community conversations. What weak signals are visible that your data sources miss?'
+  };
+
+  const insightMessages = {
+    opt: { title: 'Strong Optimiser profile', body: 'You work best when the problem is bounded, the data is clear, and the goal is agreed. Your challenge is knowing when to stop optimising and start questioning the system that produced the problem in the first place.' },
+    trans: { title: 'Strong Translator profile', body: 'You are a natural bridge-builder — at home in ambiguity, skilled at making the invisible visible. Your challenge is knowing when translation alone isn\'t enough, and structural change is needed.' },
+    stew: { title: 'Strong Steward profile', body: 'You hold the long view with unusual consistency. Your challenge is building the coalitions that allow Steward thinking to survive political pressure — and knowing when to partner with Optimisers to make your vision tangible.' },
+    list: { title: 'Strong Systems Listener profile', body: 'You read the city\'s nervous system with unusual sensitivity. Your challenge is translating what you sense into evidence that others can act on — and knowing when to move from listening to intervening.' }
+  };
+
+  function calcResults() {
+    const avgs = {};
+    let allRated = true;
+
+    for (const p in scores) {
+      const blocks = document.querySelectorAll(`.question-block[data-posture="${p}"]`);
+      if (scores[p].filter(v => v !== undefined).length < blocks.length) {
+        allRated = false;
+      }
+      const filled = scores[p].filter(v => v !== undefined);
+      avgs[p] = filled.length ? filled.reduce((a, b) => a + b, 0) / filled.length : 0;
+    }
+
+    for (const p in avgs) {
+      const pct = (avgs[p] / 5) * 100;
+      document.getElementById('bar-' + p).style.width = pct + '%';
+      document.getElementById('score-' + p).textContent = avgs[p].toFixed(1) + '/5';
+    }
+
+    const dominant = Object.entries(avgs).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+    const weakest = Object.entries(avgs).reduce((a, b) => b[1] < a[1] ? b : a)[0];
+
+    document.getElementById('insightTitle').textContent = insightMessages[dominant].title;
+    document.getElementById('insightBody').textContent = insightMessages[dominant].body;
+    document.getElementById('growthText').textContent = growthMessages[weakest];
+
+    const panel = document.getElementById('resultsPanel');
+    panel.classList.add('show');
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+</script>
+</body>
+</html>

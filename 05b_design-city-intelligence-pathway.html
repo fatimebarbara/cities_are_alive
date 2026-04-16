@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Your City Intelligence Pathway</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --purple: #534AB7; --purple-pale: #EEEDFE; --purple-dark: #3C3489;
+    --coral: #D85A30; --coral-pale: #FAECE7;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F9F6; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--teal-deep);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.012) 40px,
+      rgba(255,255,255,0.012) 80px
+    );
+  }
+  .header-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 1rem; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,4vw,2.7rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: #9FE1CB; }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.95rem; font-weight: 300; max-width: 500px; }
+
+  main { max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .pathway-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .pathway-step-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text-light);
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    text-align: center;
+    position: relative;
+  }
+  .pathway-step-btn:last-child { border-right: none; }
+  .pathway-step-btn.done::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10%; right: 10%;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 3px 3px 0 0;
+  }
+  .pathway-step-btn.active {
+    background: var(--teal-deep);
+    color: #fff;
+    font-weight: 500;
+  }
+  .pathway-step-btn .snum { display: block; font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+
+  .step-panel { display: none; animation: slideIn 0.3s ease; }
+  .step-panel.active { display: block; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+  .step-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .step-card-top {
+    background: var(--teal-deep);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+  }
+
+  .step-orb {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .step-card-top h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 3px; }
+  .step-card-top p { font-size: 0.82rem; opacity: 0.7; }
+
+  .step-card-body { padding: 1.75rem 2rem; }
+
+  .anchor-card {
+    background: var(--teal-pale);
+    border: 1px solid #9FE1CB;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .anchor-card h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal-dark); margin-bottom: 0.5rem; font-weight: 500; }
+  .anchor-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.7; }
+
+  .field-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+    margin-top: 1rem;
+  }
+  .field-label:first-of-type { margin-top: 0; }
+
+  textarea.pathway-field {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 72px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  textarea.pathway-field:focus { border-color: var(--teal); background: #fff; }
+
+  .commit-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .commit-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .commit-btn:hover { border-color: var(--teal); }
+  .commit-btn.selected { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.5rem;
+  }
+
+  .btn-back {
+    padding: 10px 20px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-back:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  .btn-next {
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: none;
+    background: var(--teal-dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-next:hover { background: var(--teal); }
+
+  /* FINAL PATHWAY CARD */
+  .pathway-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .pathway-card-header {
+    background: var(--teal-deep);
+    padding: 2rem;
+    color: #fff;
+    text-align: center;
+  }
+
+  .pathway-card-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+
+  .pathway-card-header p { opacity: 0.65; font-size: 0.85rem; }
+
+  .pathway-timeline { padding: 2rem; }
+
+  .timeline-node {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+    position: relative;
+  }
+
+  .timeline-node:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: -20px;
+    width: 2px;
+    background: var(--teal-light);
+  }
+
+  .timeline-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    z-index: 1;
+  }
+
+  .timeline-content { flex: 1; padding-top: 4px; }
+  .timeline-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 4px; font-weight: 500; }
+  .timeline-value { font-size: 0.9rem; color: var(--text-mid); line-height: 1.65; }
+  .timeline-value strong { color: var(--teal-dark); }
+
+  .commitment-seal {
+    margin: 0 2rem 2rem;
+    background: var(--teal-pale);
+    border: 1px solid #9FE1CB;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .seal-icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+  .seal-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--teal-dark); margin-bottom: 0.5rem; }
+  .seal-sub { font-size: 0.83rem; color: var(--text-light); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 05</span>
+    <div class="section-badge">🗺️ Personal Tool</div>
+    <h1>Design Your<br><em>City Intelligence Pathway</em></h1>
+    <p>A personal roadmap for where you are now, what shift you commit to, what your first intelligent move is — and how you carry this practice forward.</p>
+  </div>
+</header>
+
+<main>
+  <nav class="pathway-steps" role="tablist">
+    <button class="pathway-step-btn active" onclick="goStep(0)"><span class="snum">1</span>Where you are</button>
+    <button class="pathway-step-btn" onclick="goStep(1)"><span class="snum">2</span>Your shift</button>
+    <button class="pathway-step-btn" onclick="goStep(2)"><span class="snum">3</span>First move</button>
+    <button class="pathway-step-btn" onclick="goStep(3)"><span class="snum">4</span>Sustaining it</button>
+    <button class="pathway-step-btn" onclick="goStep(4)"><span class="snum">5</span>Your pathway</button>
+  </nav>
+
+  <!-- STEP 1 -->
+  <div class="step-panel active" id="ps0">
+    <div class="step-card">
+      <div class="step-card-top">
+        <div class="step-orb">📍</div>
+        <div><h2>Where you are now</h2><p>Honest starting points produce honest pathways.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="anchor-card">
+          <h4>The starting question</h4>
+          <p>Before you can chart a meaningful direction, you need to know your actual position — not the one you want to be in, or think you should be in. This step asks for honesty, not aspiration.</p>
+        </div>
+
+        <p class="field-label">Describe your current role and context in 2–3 sentences</p>
+        <textarea class="pathway-field" id="f_context" placeholder="What do you do, in what context, and what kind of urban challenges are you facing or working on?"></textarea>
+
+        <p class="field-label">Which City Intelligence posture do you rely on most — and which do you underuse?</p>
+        <textarea class="pathway-field" id="f_postures" placeholder="Optimiser, Translator, Steward, or Systems Listener — where do you spend most of your energy, and what is the cost of what you're neglecting?"></textarea>
+
+        <p class="field-label">What is the most significant gap between how you currently work and how the City Intelligence approach would have you work?</p>
+        <textarea class="pathway-field" id="f_gap" placeholder="Be specific. Not 'I need to think more systemically' but 'I respond to symptoms because my institution rewards quick fixes, which means I'm reinforcing the feedback loops I should be interrupting.'"></textarea>
+
+        <div class="nav-row"><button class="btn-next" onclick="goStep(1)">Next: Define your shift →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-panel" id="ps1">
+    <div class="step-card">
+      <div class="step-card-top">
+        <div class="step-orb">🔄</div>
+        <div><h2>The shift you commit to</h2><p>One real change is worth more than ten aspirations.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="anchor-card">
+          <h4>Why one shift?</h4>
+          <p>The City Intelligence approach changes how you see — but sustained practice changes how you act. Committing to one concrete, specific shift is more powerful than a list of intentions. Name the shift clearly enough that you would know, three months from now, whether you made it.</p>
+        </div>
+
+        <p class="field-label">What is the one mindset or practice shift you are committing to?</p>
+        <textarea class="pathway-field" id="f_shift" placeholder="e.g. 'From jumping to solutions to pausing to map the feedback loop first' or 'From analysing problems in my silo to actively seeking the interdependencies across departments'"></textarea>
+
+        <p class="field-label">What will be different in how you work, 90 days from now, if you make this shift?</p>
+        <textarea class="pathway-field" id="f_diff90" placeholder="Be concrete: what meetings will look different, what questions will you ask that you don't ask now, what will you notice that you currently walk past?"></textarea>
+
+        <p class="field-label">What will make this shift hard — and what is your plan for those moments?</p>
+        <textarea class="pathway-field" id="f_hardpart" placeholder="Name the institutional, cultural, or personal resistance you'll face — and how you'll hold your ground."></textarea>
+
+        <div class="nav-row">
+          <button class="btn-back" onclick="goStep(0)">← Back</button>
+          <button class="btn-next" onclick="goStep(2)">Next: Your first move →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-panel" id="ps2">
+    <div class="step-card">
+      <div class="step-card-top">
+        <div class="step-orb">⚡</div>
+        <div><h2>Your first intelligent move</h2><p>The smallest action that shifts the system — yours and your city's.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="anchor-card">
+          <h4>The First Intelligent Move principle</h4>
+          <p>Your First Move is not the biggest thing you could do. It is the most precisely placed thing you can do this week that begins to shift a pattern — in your own practice, in your team, or in your city context. Small and precisely placed beats large and scattered.</p>
+        </div>
+
+        <p class="field-label">What is your First Intelligent Move — the specific action you will take in the next 7 days?</p>
+        <textarea class="pathway-field" id="f_firstmove" placeholder="Name the action, who it involves, what pattern it targets, and what 'different' will look like when you do it."></textarea>
+
+        <p class="field-label">What CII pillar does this move address?</p>
+        <div class="commit-choices" id="pillarChoices">
+          <button class="commit-btn" onclick="pick(this)">🌱 Foundational</button>
+          <button class="commit-btn" onclick="pick(this)">💡 Innovator</button>
+          <button class="commit-btn" onclick="pick(this)">🔗 Integrator</button>
+          <button class="commit-btn" onclick="pick(this)">♻️ Regenerative</button>
+          <button class="commit-btn" onclick="pick(this)">🌐 Connected</button>
+          <button class="commit-btn" onclick="pick(this)">❤️ Healthy Society</button>
+          <button class="commit-btn" onclick="pick(this)">My own practice</button>
+        </div>
+
+        <p class="field-label">How will you know this move has worked?</p>
+        <textarea class="pathway-field" id="f_success" placeholder="Not a grand outcome metric — a small, observable signal that tells you something has shifted."></textarea>
+
+        <div class="nav-row">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Next: Sustaining the practice →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-panel" id="ps3">
+    <div class="step-card">
+      <div class="step-card-top">
+        <div class="step-orb">🌿</div>
+        <div><h2>Sustaining the practice</h2><p>Intelligence is not a destination — it is a continuous practice of stewardship.</p></div>
+      </div>
+      <div class="step-card-body">
+        <div class="anchor-card">
+          <h4>Practice, not project</h4>
+          <p>The City Intelligence approach is not a tool you use and put down. It is a way of seeing that needs to be exercised regularly to stay sharp. This step asks you to design the conditions that will keep your practice alive — through structure, accountability, and intention.</p>
+        </div>
+
+        <p class="field-label">Who will you practice with? (A colleague, a peer cohort, a mentor)</p>
+        <textarea class="pathway-field" id="f_with" placeholder="Name a person or group who will hold you accountable, challenge your thinking, or practice alongside you. Learning in community is different from learning alone."></textarea>
+
+        <p class="field-label">What regular practice will you embed? (A weekly habit, a monthly ritual, a quarterly review)</p>
+        <textarea class="pathway-field" id="f_practice" placeholder="e.g. 'I will spend 15 minutes every Monday identifying one weak signal from the previous week.' Or: 'I will hold a quarterly systems audit on the project I'm leading.'"></textarea>
+
+        <p class="field-label">What is your commitment to the cities and communities you work with?</p>
+        <textarea class="pathway-field" id="f_commit" placeholder="Not a professional objective — a human one. What do the people in your city deserve from the way you show up to this work?"></textarea>
+
+        <div class="nav-row">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="buildPathway()">Generate my City Intelligence Pathway →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: FINAL PATHWAY -->
+  <div class="step-panel" id="ps4">
+    <div class="pathway-card">
+      <div class="pathway-card-header">
+        <h2>Your City Intelligence Pathway</h2>
+        <p>A personal declaration of how you will carry this work forward.</p>
+      </div>
+      <div class="pathway-timeline" id="pathwayTimeline"></div>
+      <div class="commitment-seal">
+        <span class="seal-icon">🌱</span>
+        <div class="seal-text">"Cities will be shaped by those willing to hold complexity with care and curiosity."</div>
+        <div class="seal-sub">You have completed Cities Are Alive. This pathway is your next chapter.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  let selectedPillar = '';
+
+  function goStep(n) {
+    document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === n));
+    document.querySelectorAll('.pathway-step-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === n);
+      b.classList.toggle('done', i < n);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function pick(btn) {
+    btn.closest('.commit-choices').querySelectorAll('.commit-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedPillar = btn.textContent;
+  }
+
+  function val(id) {
+    const v = (document.getElementById(id) || {}).value || '';
+    return v.trim() || '—';
+  }
+
+  function buildPathway() {
+    const nodes = [
+      { dot: '📍', bg: '#E1F5EE', label: 'Where you are', value: val('f_context'), extra: val('f_gap') },
+      { dot: '🔄', bg: '#EEEDFE', label: 'The shift you commit to', value: val('f_shift'), extra: 'In 90 days: ' + val('f_diff90') },
+      { dot: '⚡', bg: '#FAEEDA', label: 'Your first intelligent move', value: val('f_firstmove'), extra: 'CII pillar: <strong>' + (selectedPillar || '—') + '</strong>. Success signal: ' + val('f_success') },
+      { dot: '🤝', bg: '#E6F1FB', label: 'Who you practice with', value: val('f_with') },
+      { dot: '🌱', bg: '#EAF3DE', label: 'Your regular practice', value: val('f_practice') },
+      { dot: '❤️', bg: '#FBEAF0', label: 'Your commitment', value: val('f_commit') }
+    ];
+
+    const html = nodes.map(n => `
+      <div class="timeline-node">
+        <div class="timeline-dot" style="background:${n.bg}">${n.dot}</div>
+        <div class="timeline-content">
+          <div class="timeline-label">${n.label}</div>
+          <div class="timeline-value">${n.value}${n.extra ? '<br><br>' + n.extra : ''}</div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('pathwayTimeline').innerHTML = html;
+    goStep(4);
+  }
+</script>
+</body>
+</html>

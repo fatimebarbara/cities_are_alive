@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The City Intelligence Mindset in Action</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --purple: #534AB7; --purple-dark: #3C3489; --purple-pale: #EEEDFE; --purple-light: #CECBF6;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --coral: #D85A30; --coral-pale: #FAECE7; --coral-dark: #993C1D;
+    --blue: #185FA5; --blue-pale: #E6F1FB; --blue-light: #B5D4F4;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F8F5; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  header {
+    background: var(--purple-dark);
+    padding: 3rem 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%, rgba(83,74,183,0.4) 0%, transparent 60%); }
+  .header-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; padding-bottom: 0; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 1rem; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.5rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,4vw,2.6rem); color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+  header h1 em { font-style: italic; color: #AFA9EC; }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.95rem; font-weight: 300; max-width: 500px; margin-bottom: 2rem; }
+
+  .posture-tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 1rem;
+  }
+
+  .posture-tab {
+    flex: 1;
+    padding: 12px 8px 14px;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-top: 3px solid transparent;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .posture-tab:last-child { border-right: none; }
+  .posture-tab:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .posture-tab.active { background: var(--white); color: var(--text-dark); font-weight: 500; border-top-color: var(--amber); }
+
+  .tab-icon { display: block; font-size: 20px; margin-bottom: 4px; }
+
+  main { max-width: 720px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  .posture-panel { display: none; padding: 2.5rem 0; animation: fadeIn 0.3s ease; }
+  .posture-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .posture-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 580px) { .posture-layout { grid-template-columns: 1fr; } }
+
+  .posture-intro {
+    grid-column: 1 / -1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .big-icon {
+    width: 60px; height: 60px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .posture-intro h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 4px; }
+  .posture-intro .tagline { font-size: 0.88rem; font-weight: 400; margin-bottom: 0.75rem; }
+  .posture-intro .definition { font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; }
+
+  .info-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.4rem;
+  }
+
+  .info-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.9rem; font-weight: 500; }
+
+  .info-card ul { padding-left: 1rem; }
+  .info-card li { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 6px; line-height: 1.5; }
+
+  .scenario-deck {
+    grid-column: 1 / -1;
+  }
+
+  .scenario-deck h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 1rem; font-weight: 500; }
+
+  .scenario-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .scenario-card {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--white);
+    transition: border-color 0.2s;
+  }
+
+  .scenario-card:hover { border-color: var(--purple); }
+  .scenario-card.open { border-color: var(--purple); }
+
+  .scenario-q {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+  }
+
+  .scenario-arrow { margin-left: auto; color: var(--text-light); transition: transform 0.2s; font-size: 16px; }
+  .scenario-card.open .scenario-arrow { transform: rotate(180deg); color: var(--purple); }
+
+  .scenario-answer {
+    display: none;
+    padding: 0 16px 16px 44px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .scenario-card.open .scenario-answer { display: block; }
+  .scenario-answer strong { color: var(--purple-dark); }
+
+  .scenario-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .switcher-section {
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .switcher-section h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-dark); }
+
+  .switcher-section p { font-size: 0.9rem; color: var(--text-mid); margin-bottom: 1.5rem; }
+
+  .situation-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 500px) { .situation-grid { grid-template-columns: 1fr; } }
+
+  .situation-card {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .situation-card:hover { transform: translateY(-2px); border-color: var(--purple); }
+
+  .situation-title { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); margin-bottom: 6px; }
+  .situation-context { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+
+  .recommendation-box {
+    background: var(--purple-pale);
+    border: 1px solid var(--purple-light);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .recommendation-box.show { display: block; }
+
+  .rec-posture { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--purple-dark); margin-bottom: 0.5rem; }
+  .rec-why { font-size: 0.87rem; color: var(--text-mid); line-height: 1.7; }
+  .rec-caution { font-size: 0.82rem; color: var(--text-light); margin-top: 0.75rem; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 04</span>
+    <div class="section-badge">🧠 Framework</div>
+    <h1>The City Intelligence<br><em>Mindset in Action</em></h1>
+    <p>Four professional postures that master urban practitioners move between — fluidly, intentionally, based on what the situation demands.</p>
+  </div>
+  <div class="header-inner">
+    <nav class="posture-tabs" role="tablist">
+      <button class="posture-tab active" onclick="showPosture(0)" role="tab">
+        <span class="tab-icon">⚙️</span>Optimiser
+      </button>
+      <button class="posture-tab" onclick="showPosture(1)" role="tab">
+        <span class="tab-icon">🌉</span>Translator
+      </button>
+      <button class="posture-tab" onclick="showPosture(2)" role="tab">
+        <span class="tab-icon">🌿</span>Steward
+      </button>
+      <button class="posture-tab" onclick="showPosture(3)" role="tab">
+        <span class="tab-icon">👂</span>Systems Listener
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- OPTIMISER -->
+  <div class="posture-panel active" id="p0">
+    <div class="posture-layout">
+      <div class="posture-intro">
+        <div class="big-icon" style="background:#E6F1FB">⚙️</div>
+        <div>
+          <h2 style="color:var(--blue)">The Optimiser</h2>
+          <p class="tagline" style="color:var(--blue)">Improves what already exists with evidence and precision</p>
+          <p class="definition">The Optimiser makes existing systems work better. They bring data, evidence, and analytical rigour to expose inefficiencies, reduce waste, and improve delivery. This posture is essential but insufficient alone — optimising a broken system still produces a more efficient broken system.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>When to activate this posture</h4>
+        <ul>
+          <li>A functioning system has clear performance gaps</li>
+          <li>Data and metrics are available and trustworthy</li>
+          <li>Stakeholders agree on the goal — disagreement is about method, not direction</li>
+          <li>Short timeframe, clear deliverable required</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h4>Core questions it asks</h4>
+        <ul>
+          <li>What does the data say about how this is performing?</li>
+          <li>Where is the process losing efficiency or equity?</li>
+          <li>What is the evidence for this decision?</li>
+          <li>How do we measure whether we've improved?</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:var(--blue-pale); border-color:var(--blue-light)">
+        <h4 style="color:var(--blue)">Strengths</h4>
+        <ul>
+          <li>Builds credibility through evidence</li>
+          <li>Delivers measurable impact quickly</li>
+          <li>Creates accountability structures</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:#FCEBEB; border-color:#F7C1C1">
+        <h4 style="color:#A32D2D">Risk if overused</h4>
+        <ul>
+          <li>Optimises symptoms, not causes</li>
+          <li>Misses systemic patterns behind data</li>
+          <li>Creates false certainty in a complex environment</li>
+        </ul>
+      </div>
+
+      <div class="scenario-deck">
+        <h4>Scenarios — when does the Optimiser respond?</h4>
+        <div class="scenario-cards">
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--blue-pale); color:var(--blue)">1</div>
+              The city's waste collection routes are causing repeated service failures in three districts.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Optimiser activates:</strong> Analyse the route data, identify where failures cluster, redesign the routing logic, and establish performance metrics. This is a system efficiency problem with known boundaries and measurable outcomes.</div>
+          </div>
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--blue-pale); color:var(--blue)">2</div>
+              Emergency response times vary significantly across city districts.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Optimiser activates:</strong> Map response time data geographically, identify bottlenecks (traffic patterns, resource positioning, dispatch protocols), and propose targeted operational improvements. Data-driven, bounded, measurable.</div>
+          </div>
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--blue-pale); color:var(--blue)">3</div>
+              Digital permit processing is taking 4× longer than the national average.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Optimiser activates:</strong> Process mapping to identify delay points, benchmarking against comparable cities, streamlining the workflow. Clear goal, measurable baseline, existing system to improve.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSLATOR -->
+  <div class="posture-panel" id="p1">
+    <div class="posture-layout">
+      <div class="posture-intro">
+        <div class="big-icon" style="background:#E1F5EE">🌉</div>
+        <div>
+          <h2 style="color:var(--teal-dark)">The Translator</h2>
+          <p class="tagline" style="color:var(--teal)">Bridges fragmented data, siloed institutions, and divided communities</p>
+          <p class="definition">The Translator is the interpreter of the living city. They make the invisible visible — connecting data points that don't normally talk, bridging communities who don't normally meet, and translating technical findings into human meaning. Without Translators, cities drown in data and starve of understanding.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>When to activate this posture</h4>
+        <ul>
+          <li>Relevant stakeholders are speaking past each other</li>
+          <li>Data exists but is siloed across departments</li>
+          <li>Community experience is not reflected in official data</li>
+          <li>A decision requires crossing institutional boundaries</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h4>Core questions it asks</h4>
+        <ul>
+          <li>Who is not at this table — and why?</li>
+          <li>What would this data mean to a resident in this neighbourhood?</li>
+          <li>What does this institution not see that another institution does?</li>
+          <li>How do we make this finding actionable across silos?</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:var(--teal-light); border-color:#9FE1CB">
+        <h4 style="color:var(--teal-dark)">Strengths</h4>
+        <ul>
+          <li>Creates shared understanding across difference</li>
+          <li>Surfaces invisible lived experience</li>
+          <li>Enables coordination without requiring control</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:#FCEBEB; border-color:#F7C1C1">
+        <h4 style="color:#A32D2D">Risk if overused</h4>
+        <ul>
+          <li>Can become a substitute for structural change</li>
+          <li>May inadvertently neutralise legitimate conflict</li>
+          <li>Risks burn-out in the translator, who carries the weight of many perspectives</li>
+        </ul>
+      </div>
+
+      <div class="scenario-deck">
+        <h4>Scenarios — when does the Translator respond?</h4>
+        <div class="scenario-cards">
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--teal-light); color:var(--teal-dark)">1</div>
+              A new mobility initiative is supported by technical data but opposed by community groups who feel ignored.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Translator activates:</strong> Create a process for community experience to inform the initiative — not as a consultation formality, but as a genuine data source. Translate technical metrics into neighbourhood-level impact language. Find the shared concern beneath the disagreement.</div>
+          </div>
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--teal-light); color:var(--teal-dark)">2</div>
+              Health and housing departments are generating data that, combined, would reveal a housing-health crisis — but they've never compared notes.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Translator activates:</strong> Create the bridge. Facilitate data sharing, identify the shared spatial pattern, build a joint narrative. The insight already exists in the data — it just needs a Translator to make it visible and actionable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEWARD -->
+  <div class="posture-panel" id="p2">
+    <div class="posture-layout">
+      <div class="posture-intro">
+        <div class="big-icon" style="background:var(--amber-pale)">🌿</div>
+        <div>
+          <h2 style="color:var(--amber-dark)">The Steward</h2>
+          <p class="tagline" style="color:var(--amber)">Holds the long-term direction and protects the city's future capacity</p>
+          <p class="definition">The Steward thinks in decades while everyone else thinks in quarters. They protect what matters when short-term pressures threaten to compromise long-term capacity. They hold the city's dignity, its ecological future, and its institutional memory. Stewardship is the rarest and most politically costly posture.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>When to activate this posture</h4>
+        <ul>
+          <li>Short-term political pressure threatens long-term capacity</li>
+          <li>A decision will lock in constraints for future generations</li>
+          <li>Community dignity and belonging are at risk</li>
+          <li>Ecological or institutional heritage is being traded away</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h4>Core questions it asks</h4>
+        <ul>
+          <li>Who is not yet born who will live with this decision?</li>
+          <li>What are we trading away that we cannot rebuild?</li>
+          <li>Is this decision creating optionality or locking it in?</li>
+          <li>What story will this choice tell in 30 years?</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:var(--amber-pale); border-color:#FAC775">
+        <h4 style="color:var(--amber-dark)">Strengths</h4>
+        <ul>
+          <li>Protects against path dependency and lock-in</li>
+          <li>Holds complexity when others want false simplicity</li>
+          <li>Builds durable trust through principled consistency</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:#FCEBEB; border-color:#F7C1C1">
+        <h4 style="color:#A32D2D">Risk if overused</h4>
+        <ul>
+          <li>Can appear obstructionist to action-oriented colleagues</li>
+          <li>May over-protect the status quo in contexts that need disruption</li>
+          <li>Risks political isolation without strategic alliances</li>
+        </ul>
+      </div>
+
+      <div class="scenario-deck">
+        <h4>Scenarios — when does the Steward respond?</h4>
+        <div class="scenario-cards">
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--amber-pale); color:var(--amber-dark)">1</div>
+              A major infrastructure investment is being fast-tracked for political reasons, but will lock in a carbon-intensive model for 40 years.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Steward activates:</strong> Name the lock-in clearly. Build the case — with data — for why this decision forecloses future options. Propose alternatives that preserve optionality. The Steward doesn't just protect the future; they make the cost of ignoring it visible.</div>
+          </div>
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--amber-pale); color:var(--amber-dark)">2</div>
+              Rapid gentrification is displacing long-term community members who are not visible in economic data but are essential to the city's social resilience.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Steward activates:</strong> Make dignity and belonging legible as urban assets. Argue for their protection not as sentiment but as systemic intelligence — communities with deep roots absorb shocks that new communities cannot. Loss of institutional memory is loss of adaptive capacity.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEMS LISTENER -->
+  <div class="posture-panel" id="p3">
+    <div class="posture-layout">
+      <div class="posture-intro">
+        <div class="big-icon" style="background:var(--coral-pale)">👂</div>
+        <div>
+          <h2 style="color:var(--coral-dark)">The Systems Listener</h2>
+          <p class="tagline" style="color:var(--coral)">Pays attention to weak signals, feedback loops, and lived experience</p>
+          <p class="definition">The Systems Listener is the city's diagnostic sensor. They pay close attention to what is not in the data: the unspoken, the unofficial, the felt. They notice the weak signal before it becomes a crisis. They take "soft" data seriously — community mood, trust dynamics, the quality of silence in a meeting room — because they know these are early warnings from the system.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>When to activate this posture</h4>
+        <ul>
+          <li>Something feels wrong but nothing shows up in the data yet</li>
+          <li>Community experience contradicts official metrics</li>
+          <li>A crisis has just emerged that no model predicted</li>
+          <li>You are designing something new and need to understand the real system</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h4>Core questions it asks</h4>
+        <ul>
+          <li>What is this weak signal part of a larger pattern of?</li>
+          <li>What is not being said in this conversation?</li>
+          <li>Whose experience is missing from this room?</li>
+          <li>What feedback loop does this behaviour suggest is running?</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:var(--coral-pale); border-color:#F5C4B3">
+        <h4 style="color:var(--coral-dark)">Strengths</h4>
+        <ul>
+          <li>Catches systemic risks before they compound</li>
+          <li>Validates lived experience as system data</li>
+          <li>Reveals what metrics and dashboards cannot show</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="background:#FCEBEB; border-color:#F7C1C1">
+        <h4 style="color:#A32D2D">Risk if overused</h4>
+        <ul>
+          <li>Can become paralysed by complexity — every signal leads to another signal</li>
+          <li>May lose credibility without translating observations into evidence</li>
+          <li>Risks being dismissed as "intuitive" in evidence-driven institutions</li>
+        </ul>
+      </div>
+
+      <div class="scenario-deck">
+        <h4>Scenarios — when does the Systems Listener respond?</h4>
+        <div class="scenario-cards">
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--coral-pale); color:var(--coral-dark)">1</div>
+              Civic engagement metrics are healthy but community organisers report a quiet disengagement from formal processes.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Systems Listener activates:</strong> Take the qualitative signal seriously. Investigate the gap between participation metrics and lived trust. This discrepancy is a systemic early warning — something in the feedback loop between institutions and communities is breaking down before the data catches up.</div>
+          </div>
+          <div class="scenario-card" onclick="toggleScenario(this)">
+            <div class="scenario-q">
+              <div class="scenario-num" style="background:var(--coral-pale); color:var(--coral-dark)">2</div>
+              A neighbourhood that has "good indicators" across the board feels somehow fragile — residents describe it as "one crisis away" from tipping.
+              <span class="scenario-arrow">▾</span>
+            </div>
+            <div class="scenario-answer"><strong>Systems Listener activates:</strong> Trust the felt signal. Investigate the social infrastructure that metrics don't capture — the informal networks, the trusted community figures, the resilience mechanisms that never appear in a dashboard. Fragility often shows in texture before it shows in data.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SWITCHER SECTION -->
+  <div class="switcher-section">
+    <h3>Which posture does this situation need?</h3>
+    <p>Master practitioners don't stay in one posture. They read the situation and switch. Try these urban scenarios — click to see which posture the situation calls for, and why.</p>
+
+    <div class="situation-grid">
+      <div class="situation-card" onclick="showRec(this, 'Translator', 'The city has the data and the technical solution — but the political roadblock is a community that feels unseen. The Optimiser would improve the solution. The Translator builds the bridge between technical validity and community trust. You need translation before optimisation.', 'Caution: Don\'t use the Translator posture to avoid the harder work of actually changing the plan in response to community input.')">
+        <div class="situation-title">A technically sound mobility plan is being blocked by community mistrust</div>
+        <div class="situation-context">Good data, good design — but residents don't believe the city has their interests at heart.</div>
+      </div>
+      <div class="situation-card" onclick="showRec(this, 'Steward', 'Short-term political wins should never be purchased with long-term capacity. The Steward\'s job is to make the future cost of this decision visible — in data, in scenarios, and in the language of optionality. This is the moment to name what is being traded away permanently.', 'Caution: Without political allies, the Steward posture can be isolated. Build coalitions before making the argument.')">
+        <div class="situation-title">An election cycle is creating pressure to fast-track an infrastructure deal that experts consider poorly designed</div>
+        <div class="situation-context">A 30-year lock-in decision is being treated as a 6-month deliverable.</div>
+      </div>
+      <div class="situation-card" onclick="showRec(this, 'Systems Listener', 'This is a classic Systems Listener moment. The visible event (the crisis) is almost always the product of a pattern that was visible — in weak signals — long before the crisis hit. The crisis is the system asking to be listened to. The response that only addresses the event will miss the pattern and produce the next crisis.', 'Caution: Act on what you hear. Systems listening without systems action can become passivity dressed as wisdom.')">
+        <div class="situation-title">A sudden public health crisis has emerged in a district that "had good indicators" three months ago</div>
+        <div class="situation-context">Everyone is focused on the crisis. You\'re wondering what pattern produced it.</div>
+      </div>
+      <div class="situation-card" onclick="showRec(this, 'Optimiser', 'This is the Optimiser\'s home territory. A functioning system with clear inefficiency, bounded scope, available data, and an agreed goal (faster response). Use evidence to redesign the process, set measurable targets, and track improvement. Don\'t complicate it.', 'Caution: Check first that this is genuinely a process problem and not a symptom of something systemic — like inequitable resource distribution across the city.')">
+        <div class="situation-title">Permit processing times are 3× the benchmark and the backlog is growing</div>
+        <div class="situation-context">Clear performance gap, available data, agreed goal, manageable scope.</div>
+      </div>
+    </div>
+
+    <div class="recommendation-box" id="recBox">
+      <div class="rec-posture" id="recPosture"></div>
+      <div class="rec-why" id="recWhy"></div>
+      <div class="rec-caution" id="recCaution"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function showPosture(n) {
+    document.querySelectorAll('.posture-panel').forEach((p, i) => p.classList.toggle('active', i === n));
+    document.querySelectorAll('.posture-tab').forEach((t, i) => t.classList.toggle('active', i === n));
+  }
+
+  function toggleScenario(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  function showRec(card, posture, why, caution) {
+    document.querySelectorAll('.situation-card').forEach(c => c.style.borderColor = '');
+    card.style.borderColor = 'var(--purple)';
+    document.getElementById('recPosture').textContent = 'Lead posture: ' + posture;
+    document.getElementById('recWhy').textContent = why;
+    document.getElementById('recCaution').textContent = caution;
+    document.getElementById('recBox').classList.add('show');
+  }
+</script>
+</body>
+</html>
