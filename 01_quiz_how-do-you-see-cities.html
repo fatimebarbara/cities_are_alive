@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Reflection: How Do You Currently See Cities?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --coral: #D85A30; --coral-pale: #FAECE7;
+    --purple: #534AB7; --purple-pale: #EEEDFE;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F9F6; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; min-height: 100vh; }
+
+  header {
+    background: var(--teal-deep);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(29,158,117,0.15); }
+  .header-inner { max-width: 660px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 0.75rem; }
+  .section-badge { display: inline-flex; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 11px; padding: 4px 10px; border-radius: 20px; margin-bottom: 1.25rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem,4vw,2.2rem); color: #fff; line-height: 1.2; margin-bottom: 0.5rem; }
+  header p { color: rgba(255,255,255,0.65); font-size: 0.9rem; font-weight: 300; max-width: 460px; }
+
+  .progress-wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem 0;
+  }
+
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label { font-size: 12px; color: var(--text-light); }
+  .progress-count { font-size: 12px; font-weight: 500; color: var(--teal-dark); }
+
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  main { max-width: 660px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .question-panel { display: none; animation: fadeUp 0.35s ease; }
+  .question-panel.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .q-number {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: var(--text-dark);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .q-sub {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 1.75rem;
+    font-style: italic;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+
+  .option {
+    padding: 1rem 1.25rem;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    line-height: 1.5;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .option:hover { border-color: var(--teal); background: var(--teal-pale); }
+
+  .option.selected-correct {
+    border-color: var(--teal);
+    background: var(--teal-light);
+    color: var(--teal-dark);
+  }
+
+  .option.selected-wrong {
+    border-color: var(--coral);
+    background: var(--coral-pale);
+    color: var(--coral);
+  }
+
+  .option.show-correct {
+    border-color: var(--teal);
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    opacity: 0.6;
+  }
+
+  .option.disabled { cursor: default; pointer-events: none; }
+
+  .opt-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    color: var(--text-light);
+  }
+
+  .option:hover .opt-letter { border-color: var(--teal); color: var(--teal-dark); }
+  .option.selected-correct .opt-letter { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+  .option.selected-wrong .opt-letter { background: var(--coral); border-color: var(--coral); color: #fff; }
+  .option.show-correct .opt-letter { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+  .feedback-box {
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .feedback-box.show { display: block; }
+  .feedback-box.correct { background: var(--teal-light); border: 1px solid #9FE1CB; color: var(--teal-dark); }
+  .feedback-box.wrong { background: var(--coral-pale); border: 1px solid #F5C4B3; color: var(--coral); }
+
+  .feedback-box .fb-label { font-weight: 500; margin-bottom: 4px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .feedback-box .fb-body { color: var(--text-mid); }
+  .feedback-box.correct .fb-body { color: var(--teal-dark); }
+
+  .next-btn {
+    display: none;
+    width: 100%;
+    padding: 13px;
+    background: var(--teal-dark);
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--teal); }
+
+  /* RESULTS */
+  .results-panel { display: none; animation: fadeUp 0.4s ease; }
+  .results-panel.active { display: block; }
+
+  .results-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .results-header {
+    background: var(--teal-deep);
+    padding: 2rem;
+    color: #fff;
+    text-align: center;
+  }
+
+  .score-circle {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 3px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    flex-direction: column;
+  }
+
+  .score-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; line-height: 1; }
+  .score-denom { font-size: 12px; opacity: 0.65; }
+
+  .results-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 6px; }
+  .results-header p { font-size: 0.85rem; opacity: 0.7; }
+
+  .results-body { padding: 2rem; }
+
+  .mindset-label {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+  }
+
+  .results-insight {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  .results-insight strong { color: var(--teal-dark); }
+
+  .q-review { margin-top: 1.5rem; }
+  .q-review h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 1rem; font-weight: 500; }
+
+  .review-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    align-items: flex-start;
+  }
+  .review-item:last-child { border-bottom: none; }
+
+  .review-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .dot-c { background: var(--teal); }
+  .dot-w { background: var(--coral); }
+
+  .review-q { color: var(--text-mid); flex: 1; }
+
+  .forward-strip {
+    background: var(--teal-pale);
+    border: 1px solid #9FE1CB;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: var(--teal-dark);
+    line-height: 1.7;
+  }
+
+  .forward-strip strong { display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Cities Are Alive · Section 01</span>
+    <div class="section-badge">✅ Reflection</div>
+    <h1>How Do You Currently<br>See Cities?</h1>
+    <p>Five quick questions to surface your current mental model — before we start shifting it.</p>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">Your progress</span>
+    <span class="progress-count" id="progressCount">Question 1 of 5</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+</div>
+
+<main>
+
+  <!-- Q1 -->
+  <div class="question-panel active" id="q0">
+    <p class="q-number">Question 1</p>
+    <p class="q-text">When you hear that a city has a "problem" — say, rising homelessness — what is your first instinct?</p>
+    <p class="q-sub">There's no right answer yet. Just notice your honest reaction.</p>
+    <div class="options">
+      <button class="option" onclick="answer(0,0,false)">
+        <span class="opt-letter">A</span>
+        Find out which department is responsible and what resources it has
+      </button>
+      <button class="option" onclick="answer(0,1,false)">
+        <span class="opt-letter">B</span>
+        Look for the policy that needs fixing or the service that's missing
+      </button>
+      <button class="option" onclick="answer(0,2,true)">
+        <span class="opt-letter">C</span>
+        Ask what pattern of conditions is producing this outcome — and what's been reinforcing it
+      </button>
+      <button class="option" onclick="answer(0,3,false)">
+        <span class="opt-letter">D</span>
+        Compare what other cities have done and replicate the best practice
+      </button>
+    </div>
+    <div class="feedback-box" id="fb0"></div>
+    <button class="next-btn" id="next0" onclick="nextQ(1)">Next question →</button>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-panel" id="q1">
+    <p class="q-number">Question 2</p>
+    <p class="q-text">A city builds a new metro line, but congestion gets worse six months later. What most likely happened?</p>
+    <p class="q-sub">Think about what you know — or suspect — about how cities actually work.</p>
+    <div class="options">
+      <button class="option" onclick="answer(1,0,false)">
+        <span class="opt-letter">A</span>
+        The line wasn't built in the right location
+      </button>
+      <button class="option" onclick="answer(1,1,false)">
+        <span class="opt-letter">B</span>
+        The city's population grew faster than expected
+      </button>
+      <button class="option" onclick="answer(1,2,true)">
+        <span class="opt-letter">C</span>
+        Better transit attracted more development and car ownership, creating a reinforcing loop that offset the gain
+      </button>
+      <button class="option" onclick="answer(1,3,false)">
+        <span class="opt-letter">D</span>
+        The project was mismanaged
+      </button>
+    </div>
+    <div class="feedback-box" id="fb1"></div>
+    <button class="next-btn" id="next1" onclick="nextQ(2)">Next question →</button>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-panel" id="q2">
+    <p class="q-number">Question 3</p>
+    <p class="q-text">Which of these would you consider the most important data point for understanding a city's health?</p>
+    <p class="q-sub">Trust your instinct — we'll revisit this question at the end of the course.</p>
+    <div class="options">
+      <button class="option" onclick="answer(2,0,false)">
+        <span class="opt-letter">A</span>
+        GDP per capita
+      </button>
+      <button class="option" onclick="answer(2,1,false)">
+        <span class="opt-letter">B</span>
+        Infrastructure investment as % of budget
+      </button>
+      <button class="option" onclick="answer(2,2,false)">
+        <span class="opt-letter">C</span>
+        Crime rate
+      </button>
+      <button class="option" onclick="answer(2,3,true)">
+        <span class="opt-letter">D</span>
+        The degree to which residents trust their institutions and feel their participation changes outcomes
+      </button>
+    </div>
+    <div class="feedback-box" id="fb2"></div>
+    <button class="next-btn" id="next2" onclick="nextQ(3)">Next question →</button>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-panel" id="q3">
+    <p class="q-number">Question 4</p>
+    <p class="q-text">A neighbourhood has been declining for years. Residents describe it as "forgotten." The data shows low income, high vacancy, poor services. As a decision-maker, what do you prioritise first?</p>
+    <p class="q-sub">This is a real dilemma — there's tension between the options.</p>
+    <div class="options">
+      <button class="option" onclick="answer(3,0,false)">
+        <span class="opt-letter">A</span>
+        Attract private investment to regenerate the area
+      </button>
+      <button class="option" onclick="answer(3,1,false)">
+        <span class="opt-letter">B</span>
+        Improve services — housing, health, education — simultaneously
+      </button>
+      <button class="option" onclick="answer(3,2,true)">
+        <span class="opt-letter">C</span>
+        Understand the feedback loop that produced "forgotten" — and find the leverage point that would shift the whole pattern
+      </button>
+      <button class="option" onclick="answer(3,3,false)">
+        <span class="opt-letter">D</span>
+        Consult residents and give them a voice in the plan
+      </button>
+    </div>
+    <div class="feedback-box" id="fb3"></div>
+    <button class="next-btn" id="next3" onclick="nextQ(4)">Next question →</button>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-panel" id="q4">
+    <p class="q-number">Question 5</p>
+    <p class="q-text">In your current work or context, when you face a complex urban challenge, which best describes how you tend to respond?</p>
+    <p class="q-sub">Honest self-assessment — this shapes your learning pathway through the course.</p>
+    <div class="options">
+      <button class="option" onclick="answer(4,0,false)">
+        <span class="opt-letter">A</span>
+        I look for a precedent — what worked somewhere else?
+      </button>
+      <button class="option" onclick="answer(4,1,false)">
+        <span class="opt-letter">B</span>
+        I gather data and present the evidence to decision-makers
+      </button>
+      <button class="option" onclick="answer(4,2,false)">
+        <span class="opt-letter">C</span>
+        I identify the fastest workable solution and move quickly
+      </button>
+      <button class="option" onclick="answer(4,3,true)">
+        <span class="opt-letter">D</span>
+        I try to map the system first — even if it slows things down — because I've learned that quick fixes often make things worse
+      </button>
+    </div>
+    <div class="feedback-box" id="fb4"></div>
+    <button class="next-btn" id="next4" onclick="showResults()">See my results →</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-panel" id="results">
+    <div class="results-card">
+      <div class="results-header">
+        <div class="score-circle">
+          <span class="score-num" id="scoreNum">0</span>
+          <span class="score-denom">/ 5</span>
+        </div>
+        <h2 id="resultsTitle">Your starting point</h2>
+        <p id="resultsSubtitle"></p>
+      </div>
+      <div class="results-body">
+        <div class="mindset-label" id="mindsetLabel"></div>
+        <div class="results-insight" id="resultsInsight"></div>
+        <div class="q-review">
+          <h4>Your answers</h4>
+          <div id="reviewItems"></div>
+        </div>
+        <div class="forward-strip" id="forwardStrip"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const questions = [
+    {
+      short: "First instinct on a city problem",
+      correct: 2,
+      feedbacks: [
+        { type: 'wrong', label: 'Machine thinking', body: 'Assigning responsibility is important — but it often reinforces silos. The living systems approach asks: what is producing this outcome across the whole system?' },
+        { type: 'wrong', label: 'Machine thinking', body: 'Policy fixes address symptoms. The question beneath this one is: what pattern or structural dynamic is producing the need for this policy in the first place?' },
+        { type: 'correct', label: 'Systems thinking', body: 'This is the foundation of living systems thinking. Before deciding what to do, you need to understand what the system is actually doing — and why.' },
+        { type: 'wrong', label: 'Common but limited', body: 'Benchmarking has value — but direct replication ignores context. Cities are deeply shaped by their unique history, culture, and interdependencies. What worked in Copenhagen may reinforce the wrong loop in your city.' }
+      ]
+    },
+    {
+      short: "Metro line that worsened congestion",
+      correct: 2,
+      feedbacks: [
+        { type: 'wrong', label: 'Possible, but partial', body: 'Location matters, but this answer treats the problem as static. The deeper question is: what behaviour did the new metro line trigger in the broader system?' },
+        { type: 'wrong', label: 'Possible, but partial', body: 'Population growth is a factor — but it doesn\'t explain why congestion increases specifically after a transit improvement. Something in the system responded.' },
+        { type: 'correct', label: 'Reinforcing loop', body: 'This is a classic reinforcing loop — known as "induced demand." Better transit increases accessibility, which increases development, which increases car ownership. The intervention changed one part of the system; the system responded by adjusting everything else. This is why cities cannot be optimised in parts.' },
+        { type: 'wrong', label: 'Insufficient explanation', body: 'Management matters, but even well-managed infrastructure can produce unintended consequences in complex systems. The issue is systemic, not managerial.' }
+      ]
+    },
+    {
+      short: "Most important data point",
+      correct: 3,
+      feedbacks: [
+        { type: 'wrong', label: 'Measures output, not intelligence', body: 'GDP captures economic output but says nothing about distribution, resilience, or whether the city is strengthening its adaptive capacity. Rich cities can have deeply fragile systems.' },
+        { type: 'wrong', label: 'Measures investment, not outcome', body: 'Investment matters — but cities can invest heavily in the wrong things. Infrastructure without trust, participation, or coordination may produce expensive outcomes that don\'t improve lives.' },
+        { type: 'wrong', label: 'Measures symptoms', body: 'Crime rate is a visible symptom. But it reflects the health of social infrastructure, economic opportunity, community trust, and institutional legitimacy — none of which the statistic itself reveals.' },
+        { type: 'correct', label: 'Foundational intelligence', body: 'Institutional trust and participatory capacity are among the most powerful predictors of long-term urban resilience. A city where residents believe their voice matters is a city whose feedback loops are functioning. This is what the City Intelligence Index calls Foundational Intelligence — and it underpins everything else.' }
+      ]
+    },
+    {
+      short: "Declining neighbourhood priority",
+      correct: 2,
+      feedbacks: [
+        { type: 'wrong', label: 'May accelerate displacement', body: 'Investment without systems understanding often produces gentrification — which pushes out the residents who most need improvement and erodes the community resilience that made intervention possible.' },
+        { type: 'wrong', label: 'Treats symptoms in parallel', body: 'Improving multiple services simultaneously is better than acting in silos — but without understanding the feedback loop that produced "forgotten", improvements may not hold. The system will find ways to revert.' },
+        { type: 'correct', label: 'Leverage thinking', body: 'The word "forgotten" contains the signal. It describes a trust collapse — residents feel unseen by institutions. That trust collapse is a feedback loop: disengagement leads to lower service quality, which leads to more disengagement. The leverage point is almost always in the trust and dignity layer — before housing, before investment.' },
+        { type: 'wrong', label: 'Necessary, but not sufficient', body: 'Consultation is essential — but without systems understanding, it often produces a list of demands rather than a diagnosis of the underlying dynamic. The voice of residents is data; the system that produced their situation is the puzzle.' }
+      ]
+    },
+    {
+      short: "Your typical response to complex challenges",
+      correct: 3,
+      feedbacks: [
+        { type: 'wrong', label: 'Context-blind', body: 'Precedents are useful as inspiration — but no two cities share the same feedback loops, cultural dynamics, or institutional history. Copying solutions without understanding context is one of the most common sources of policy failure.' },
+        { type: 'wrong', label: 'Evidence without system', body: 'Evidence is necessary — but presenting data to decision-makers without a systems frame often produces technically correct recommendations that get implemented in the wrong order, at the wrong scale, or in ways that reinforce the problem.' },
+        { type: 'wrong', label: 'Speed without understanding', body: 'Moving quickly feels productive — but in complex systems, fast interventions that haven\'t mapped the feedback loops often create the next problem. The cost of misdiagnosis compounds over time.' },
+        { type: 'correct', label: 'Systems practitioner', body: 'You already have an instinct that complex systems require understanding before action. This course will give that instinct a framework — and sharpen it into a practice. You\'re in exactly the right place.' }
+      ]
+    }
+  ];
+
+  const userAnswers = [];
+  let currentQ = 0;
+
+  function answer(qIdx, optIdx, isCorrect) {
+    const panel = document.getElementById('q' + qIdx);
+    const opts = panel.querySelectorAll('.option');
+    const fb = document.getElementById('fb' + qIdx);
+    const nextBtn = document.getElementById('next' + qIdx);
+
+    opts.forEach(o => o.classList.add('disabled'));
+    opts[optIdx].classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+
+    if (!isCorrect) {
+      const correctIdx = questions[qIdx].correct;
+      opts[correctIdx].classList.add('show-correct');
+    }
+
+    const f = questions[qIdx].feedbacks[optIdx];
+    fb.className = 'feedback-box show ' + (isCorrect ? 'correct' : 'wrong');
+    fb.innerHTML = `<div class="fb-label">${f.label}</div><div class="fb-body">${f.body}</div>`;
+
+    nextBtn.classList.add('show');
+    userAnswers[qIdx] = isCorrect;
+
+    const progress = ((qIdx + 1) / 5) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressCount').textContent = 'Question ' + (qIdx + 1) + ' of 5';
+  }
+
+  function nextQ(n) {
+    document.getElementById('q' + (n-1)).classList.remove('active');
+    document.getElementById('q' + n).classList.add('active');
+    document.getElementById('progressCount').textContent = 'Question ' + (n + 1) + ' of 5';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showResults() {
+    document.getElementById('q4').classList.remove('active');
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressCount').textContent = 'Complete';
+
+    const score = userAnswers.filter(Boolean).length;
+    document.getElementById('scoreNum').textContent = score;
+
+    let title, subtitle, label, labelStyle, insight, forward;
+
+    if (score === 5) {
+      title = 'Strong systems instinct';
+      subtitle = 'You already think in patterns and feedback loops.';
+      label = '🌱 Systems thinker'; labelStyle = 'background:var(--teal-light); color:var(--teal-dark)';
+      insight = 'You arrived here with a well-developed instinct for living systems thinking. You ask questions about patterns and structures rather than jumping to solutions. <strong>This course will sharpen and formalise what you already do intuitively</strong> — and give you a framework that makes your thinking actionable at scale.';
+      forward = '<strong>What this means for your learning:</strong> Pay particular attention to the City Intelligence Index in Section 03 — it will give your existing instincts a diagnostic structure.';
+    } else if (score >= 3) {
+      title = 'Emerging systems awareness';
+      subtitle = 'You have strong instincts — with room to deepen them.';
+      label = '🔄 Transitioning thinker'; labelStyle = 'background:var(--amber-pale); color:var(--amber-dark)';
+      insight = 'You\'re somewhere between the mechanical and living systems worldview — which is actually where most thoughtful urban practitioners are. You know that simple fixes often backfire, but you don\'t yet have a complete framework for why. <strong>This course is designed precisely for where you are.</strong>';
+      forward = '<strong>What this means for your learning:</strong> The feedback loop content in Section 02 will be particularly clarifying — it explains the mechanism behind the patterns you\'ve already started to notice.';
+    } else {
+      title = 'Classic machine-model thinking';
+      subtitle = 'This is where almost everyone starts — and it\'s a great starting point.';
+      label = '⚙️ Machine model'; labelStyle = 'background:var(--purple-pale); color:var(--purple)';
+      insight = 'Your instincts reflect the dominant model of urban management — problem-focused, efficiency-oriented, department-driven. <strong>This model has built a lot of things.</strong> It has also produced a lot of unintended consequences. This course will show you exactly why — and give you a fundamentally different way of reading cities that will change how you work.';
+      forward = '<strong>What this means for your learning:</strong> Section 02 will be your most transformative moment. Don\'t rush it — the shift from machine to living systems thinking is the foundation everything else builds on.';
+    }
+
+    document.getElementById('resultsTitle').textContent = title;
+    document.getElementById('resultsSubtitle').textContent = subtitle;
+    document.getElementById('mindsetLabel').textContent = label;
+    document.getElementById('mindsetLabel').style.cssText = labelStyle + '; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:500;';
+    document.getElementById('resultsInsight').innerHTML = insight;
+    document.getElementById('forwardStrip').innerHTML = forward;
+
+    const reviewItems = questions.map((q, i) => `
+      <div class="review-item">
+        <span class="review-dot ${userAnswers[i] ? 'dot-c' : 'dot-w'}"></span>
+        <span class="review-q">${q.short}</span>
+      </div>
+    `).join('');
+    document.getElementById('reviewItems').innerHTML = reviewItems;
+
+    document.getElementById('results').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
