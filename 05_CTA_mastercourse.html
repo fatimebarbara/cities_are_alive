@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Comes Next — City Intelligence Mastercourse</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-dark: #0F6E56; --teal-deep: #04342C;
+    --teal-light: #E1F5EE; --teal-pale: #F2FBF7;
+    --amber: #EF9F27; --amber-pale: #FAEEDA; --amber-dark: #BA7517;
+    --text-dark: #1A1A1A; --text-mid: #444; --text-light: #888;
+    --bg: #F8F9F6; --white: #fff; --border: rgba(0,0,0,0.08);
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.7; }
+
+  /* HERO */
+  .hero {
+    background: var(--teal-deep);
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(29,158,117,0.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 30%, rgba(83,74,183,0.12) 0%, transparent 50%);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(255,255,255,0.012) 80px,
+      rgba(255,255,255,0.012) 81px
+    );
+  }
+
+  .hero-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .completion-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(29,158,117,0.2);
+    border: 1px solid rgba(29,158,117,0.4);
+    color: #9FE1CB;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 em { font-style: italic; color: #9FE1CB; }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--teal);
+    border: none;
+    border-radius: 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(29,158,117,0.3);
+  }
+
+  .btn-primary:hover { background: #1D9E75; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(29,158,117,0.4); }
+
+  .btn-secondary {
+    padding: 14px 28px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+  /* TRANSITION STRIP */
+  .transition-strip {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .transition-strip p {
+    max-width: 560px;
+    margin: 0 auto;
+    font-size: 1rem;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  .transition-strip strong { color: var(--teal-dark); }
+
+  /* WHAT'S DIFFERENT */
+  main { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  .section-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    color: var(--text-dark);
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+    max-width: 520px;
+  }
+
+  /* COMPARISON */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 560px) { .comparison { grid-template-columns: 1fr; } }
+
+  .compare-card {
+    border-radius: 20px;
+    padding: 1.75rem;
+  }
+
+  .compare-card.free-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+  }
+
+  .compare-card.paid-card {
+    background: var(--teal-deep);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .compare-card.paid-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: rgba(29,158,117,0.15);
+  }
+
+  .compare-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .free-card .compare-label { background: var(--teal-light); color: var(--teal-dark); }
+  .paid-card .compare-label { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+
+  .compare-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .free-card h3 { color: var(--text-dark); }
+  .paid-card h3 { color: #fff; }
+
+  .compare-list { list-style: none; padding: 0; }
+  .compare-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .free-card .compare-list li { color: var(--text-mid); }
+  .paid-card .compare-list li { color: rgba(255,255,255,0.8); }
+
+  .li-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .free-card .li-dot { background: var(--border); }
+  .paid-card .li-dot { background: #9FE1CB; }
+
+  /* WHAT YOU GET */
+  .modules-section { margin-bottom: 3rem; }
+
+  .module-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .module-card:hover { border-color: var(--teal); }
+
+  .module-num {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .module-title { font-size: 0.92rem; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+  .module-desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+
+  /* CII TEASER */
+  .cii-teaser {
+    background: var(--teal-deep);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cii-teaser::before {
+    content: '';
+    position: absolute;
+    bottom: -50px; right: -50px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(29,158,117,0.12);
+  }
+
+  .cii-teaser-inner { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; }
+
+  .cii-teaser .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); margin-bottom: 0.75rem; display: block; }
+
+  .cii-teaser h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.75rem; }
+
+  .cii-teaser p { font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.5rem; line-height: 1.7; }
+
+  .cii-pillars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+  }
+
+  .pillar-chip {
+    padding: 5px 14px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .btn-cii {
+    padding: 12px 28px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-cii:hover { background: rgba(255,255,255,0.18); }
+
+  /* FINAL CTA */
+  .final-cta {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .final-cta h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem,3.5vw,2rem); color: var(--text-dark); margin-bottom: 0.75rem; }
+
+  .final-cta p { font-size: 0.92rem; color: var(--text-mid); max-width: 440px; margin: 0 auto 2rem; line-height: 1.75; }
+
+  .final-cta .btn-primary {
+    font-size: 1rem;
+    padding: 15px 36px;
+  }
+
+  .trust-line {
+    margin-top: 1.25rem;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .trust-line span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="completion-badge">
+      ✦ You've completed Cities Are Alive
+    </div>
+    <h1>You've started to see<br><em>cities differently.</em><br>Now go deeper.</h1>
+    <p class="hero-sub">Cities Are Alive gave you the lens. The City Intelligence Mastercourse gives you the instruments — to diagnose, intervene, and lead with systemic intelligence.</p>
+    <div class="hero-cta-group">
+      <a href="https://yourlearnworldsurl.com/mastercourse" class="btn-primary">
+        Explore the Mastercourse ↗
+      </a>
+      <a href="#what-is-different" class="btn-secondary">
+        See what's different
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSITION -->
+<div class="transition-strip">
+  <p>This course was an introduction to a way of seeing. The Mastercourse is where that seeing becomes <strong>practice</strong> — structured, applied, and built around the City Intelligence Index as a diagnostic instrument for real urban decisions.</p>
+</div>
+
+<main>
+
+  <!-- COMPARISON -->
+  <div id="what-is-different">
+    <span class="section-eyebrow">What's different</span>
+    <h2 class="section-heading">From introduction to practice</h2>
+    <p class="section-sub">Cities Are Alive shifts your lens. The Mastercourse puts it to work.</p>
+
+    <div class="comparison">
+      <div class="compare-card free-card">
+        <span class="compare-label">Cities Are Alive — Free</span>
+        <h3>A new way of seeing cities</h3>
+        <ul class="compare-list">
+          <li><span class="li-dot"></span>The biological paradigm shift</li>
+          <li><span class="li-dot"></span>Flows, feedback loops, interdependence</li>
+          <li><span class="li-dot"></span>Introduction to the CII</li>
+          <li><span class="li-dot"></span>The three thinking shifts</li>
+          <li><span class="li-dot"></span>The four professional postures</li>
+          <li><span class="li-dot"></span>Your first intelligent move</li>
+        </ul>
+      </div>
+      <div class="compare-card paid-card">
+        <span class="compare-label">City Intelligence Mastercourse</span>
+        <h3>Working with the system in depth</h3>
+        <ul class="compare-list">
+          <li><span class="li-dot"></span>Deep diagnostic work with the full CII</li>
+          <li><span class="li-dot"></span>150 indicators across 10 European cities</li>
+          <li><span class="li-dot"></span>Why cities fail despite good data</li>
+          <li><span class="li-dot"></span>The four conditions for city intelligence</li>
+          <li><span class="li-dot"></span>Ethics of urban intelligence</li>
+          <li><span class="li-dot"></span>Building your City Intelligence practice</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULES -->
+  <div class="modules-section">
+    <span class="section-eyebrow">Inside the Mastercourse</span>
+    <h2 class="section-heading">Six sections. Real depth.</h2>
+    <p class="section-sub">Each section goes where Cities Are Alive couldn't — into the diagnostic work, the data, the ethics, and the practice.</p>
+
+    <div class="module-card">
+      <div class="module-num">1</div>
+      <div>
+        <div class="module-title">Why cities fail despite good data</div>
+        <div class="module-desc">The decision distortion map. The failure modes framework. Why intelligence and good decisions are not the same thing.</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">2</div>
+      <div>
+        <div class="module-title">What city intelligence actually is</div>
+        <div class="module-desc">The four conditions — Circulation, Feedback, Alignment, and Time Horizon. Why most cities meet none of them completely.</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">3</div>
+      <div>
+        <div class="module-title">Inside the City Intelligence Index</div>
+        <div class="module-desc">150 indicators. 10 European cities. Six pillars in diagnostic depth. Learning to read the CII as a practitioner, not just a reader.</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">4</div>
+      <div>
+        <div class="module-title">Designing intelligent interventions</div>
+        <div class="module-desc">From signal to strategy. Sequencing for impact. The full 7-step City Intelligence Improvement Plan applied to real contexts.</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">5</div>
+      <div>
+        <div class="module-title">The ethics of city intelligence</div>
+        <div class="module-desc">Data, dignity, and power. Who gets measured. Who gets left out. What responsible urban intelligence demands from its practitioners.</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">6</div>
+      <div>
+        <div class="module-title">Building your practice</div>
+        <div class="module-desc">From learner to practitioner. How to embed city intelligence thinking into your team, your institution, and your daily work.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CII TOOL TEASER -->
+  <div class="cii-teaser">
+    <div class="cii-teaser-inner">
+      <span class="eyebrow">Coming soon</span>
+      <h3>The CII Interactive Tool</h3>
+      <p>Explore 150 indicators across 10 European cities. Diagnose urban intelligence gaps. Compare cities across all six pillars. The data behind the framework — made explorable.</p>
+      <div class="cii-pillars">
+        <span class="pillar-chip">🌱 Foundational</span>
+        <span class="pillar-chip">💡 Innovator</span>
+        <span class="pillar-chip">🔗 Integrator</span>
+        <span class="pillar-chip">♻️ Regenerative</span>
+        <span class="pillar-chip">🌐 Connected</span>
+        <span class="pillar-chip">❤️ Healthy Society</span>
+      </div>
+      <a href="https://cityintelligenceindex.com" class="btn-cii">
+        Visit cityintelligenceindex.com ↗
+      </a>
+    </div>
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="final-cta">
+    <h2>Ready to go from seeing<br>to doing?</h2>
+    <p>The Mastercourse is built for policymakers, researchers, and urban practitioners who want to move from understanding cities as living systems to making better decisions inside them.</p>
+    <a href="https://yourlearnworldsurl.com/mastercourse" class="btn-primary">
+      Join the City Intelligence Mastercourse →
+    </a>
+    <div class="trust-line">
+      <span>📚 Based on The Future of Cities</span>
+      <span>🏙️ 10 European cities</span>
+      <span>⏱️ ~4–5 hours</span>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>
