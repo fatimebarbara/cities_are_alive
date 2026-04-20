@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check Your Understanding: Systems Thinking in Cities</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --teal:#1D9E75;--teal-dark:#0F6E56;--teal-deep:#04342C;
+    --teal-light:#E1F5EE;--teal-pale:#F2FBF7;
+    --amber:#EF9F27;--amber-pale:#FAEEDA;--amber-dark:#BA7517;
+    --coral:#D85A30;--coral-pale:#FAECE7;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-dark:#3C3489;
+    --text-dark:#1A1A1A;--text-mid:#444;--text-light:#888;
+    --bg:#F8F9F6;--white:#fff;--border:rgba(0,0,0,0.08)
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-dark);line-height:1.7;min-height:100vh}
+  header{background:var(--teal-dark);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05)}
+  .hi{max-width:660px;margin:0 auto;position:relative;z-index:1}
+  .ctag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);display:block;margin-bottom:.75rem}
+  .sbadge{display:inline-flex;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:11px;padding:4px 10px;border-radius:20px;margin-bottom:1.25rem}
+  header h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4vw,2.1rem);color:#fff;line-height:1.2;margin-bottom:.5rem}
+  header p{color:rgba(255,255,255,.65);font-size:.9rem;font-weight:300;max-width:460px}
+  .pw{max-width:660px;margin:0 auto;padding:1.25rem 1.5rem 0}
+  .pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .pl{font-size:12px;color:var(--text-light)}
+  .pc{font-size:12px;font-weight:500;color:var(--teal-dark)}
+  .ptr{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+  .pf{height:100%;background:var(--teal);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+  main{max-width:660px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  .qp{display:none;animation:fu .35s ease}
+  .qp.active{display:block}
+  @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .qnum{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:500;margin-bottom:.75rem}
+  .qt{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,3vw,1.35rem);color:var(--text-dark);line-height:1.4;margin-bottom:.4rem}
+  .qs{font-size:.85rem;color:var(--text-light);margin-bottom:1.75rem;font-style:italic}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+  .opt{padding:1rem 1.25rem;background:var(--white);border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-size:.9rem;color:var(--text-dark);line-height:1.5;text-align:left;font-family:'DM Sans',sans-serif}
+  .opt:hover{border-color:var(--teal);background:var(--teal-pale)}
+  .opt.sc{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark)}
+  .opt.sw{border-color:var(--coral);background:var(--coral-pale);color:var(--coral)}
+  .opt.sk{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark);opacity:.6}
+  .opt.disabled{cursor:default;pointer-events:none}
+  .ol{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;transition:all .18s;color:var(--text-light)}
+  .opt:hover .ol{border-color:var(--teal);color:var(--teal-dark)}
+  .opt.sc .ol{background:var(--teal-dark);border-color:var(--teal-dark);color:#fff}
+  .opt.sw .ol{background:var(--coral);border-color:var(--coral);color:#fff}
+  .opt.sk .ol{background:var(--teal);border-color:var(--teal);color:#fff}
+  .fb{border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.7;display:none;animation:fu .3s ease}
+  .fb.show{display:block}
+  .fb.correct{background:var(--teal-light);border:1px solid #9FE1CB;color:var(--teal-dark)}
+  .fb.wrong{background:var(--coral-pale);border:1px solid #F5C4B3;color:var(--coral)}
+  .fbl{font-weight:500;margin-bottom:4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+  .fbb{color:var(--text-mid)}
+  .fb.correct .fbb{color:var(--teal-dark)}
+  .nb{display:none;width:100%;padding:13px;background:var(--teal-dark);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;color:#fff;cursor:pointer;transition:background .2s}
+  .nb.show{display:block}
+  .nb:hover{background:var(--teal)}
+  .rp{display:none;animation:fu .4s ease}
+  .rp.active{display:block}
+  .rc{background:var(--white);border:1px solid var(--border);border-radius:24px;overflow:hidden}
+  .rh{background:var(--teal-deep);padding:2rem;color:#fff;text-align:center}
+  .sc-circle{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;flex-direction:column}
+  .sn{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1}
+  .sd{font-size:12px;opacity:.65}
+  .rh h2{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:6px}
+  .rh p{font-size:.85rem;opacity:.7}
+  .rb{padding:2rem}
+  .ml{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;margin-bottom:1.25rem}
+  .ri{font-size:.92rem;color:var(--text-mid);line-height:1.75;margin-bottom:1.5rem}
+  .ri strong{color:var(--teal-dark)}
+  .qrev h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);margin-bottom:1rem;font-weight:500}
+  .ritem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem;align-items:flex-start}
+  .ritem:last-child{border-bottom:none}
+  .rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px}
+  .dot-c{background:var(--teal)}
+  .dot-w{background:var(--coral)}
+  .rq{color:var(--text-mid);flex:1}
+  .fs{background:var(--teal-pale);border:1px solid #9FE1CB;border-radius:14px;padding:1.25rem 1.5rem;margin-top:1.5rem;font-size:.88rem;color:var(--teal-dark);line-height:1.7}
+  .fs strong{display:block;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;opacity:.7}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <span class="ctag">Cities Are Alive · Section 02</span>
+    <div class="sbadge">✅ Check Your Understanding</div>
+    <h1>Systems Thinking in Cities</h1>
+    <p>Seven questions to test and deepen your grasp of flows, feedback loops, interdependence, and adaptation.</p>
+  </div>
+</header>
+<div class="pw">
+  <div class="pt"><span class="pl">Progress</span><span class="pc" id="pc">Question 1 of 7</span></div>
+  <div class="ptr"><div class="pf" id="pf" style="width:0%"></div></div>
+</div>
+<main>
+
+<div class="qp active" id="q0">
+  <p class="qnum">Question 1</p>
+  <p class="qt">A city's "intelligence" is most visible in which of the following?</p>
+  <p class="qs">Think about what animates a living system.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(0,0,false)"><span class="ol">A</span>The quality and quantity of its infrastructure</button>
+    <button class="opt" onclick="ans(0,1,true)"><span class="ol">B</span>The patterns of its flows — how people, information, resources, and emotions move through it</button>
+    <button class="opt" onclick="ans(0,2,false)"><span class="ol">C</span>Its GDP and economic output per capita</button>
+    <button class="opt" onclick="ans(0,3,false)"><span class="ol">D</span>The efficiency of its public administration</button>
+  </div>
+  <div class="fb" id="fb0"></div>
+  <button class="nb" id="nb0" onclick="nxt(1)">Next →</button>
+</div>
+
+<div class="qp" id="q1">
+  <p class="qnum">Question 2</p>
+  <p class="qt">What is the difference between a reinforcing loop and a balancing loop?</p>
+  <p class="qs">Both are feedback loops — but they do opposite things to a system.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(1,0,false)"><span class="ol">A</span>Reinforcing loops are positive; balancing loops are negative</button>
+    <button class="opt" onclick="ans(1,1,false)"><span class="ol">B</span>Reinforcing loops require more investment; balancing loops happen naturally</button>
+    <button class="opt" onclick="ans(1,2,true)"><span class="ol">C</span>Reinforcing loops amplify a pattern over time; balancing loops counteract change and seek equilibrium</button>
+    <button class="opt" onclick="ans(1,3,false)"><span class="ol">D</span>Reinforcing loops apply to infrastructure; balancing loops apply to social systems</button>
+  </div>
+  <div class="fb" id="fb1"></div>
+  <button class="nb" id="nb1" onclick="nxt(2)">Next →</button>
+</div>
+
+<div class="qp" id="q2">
+  <p class="qnum">Question 3</p>
+  <p class="qt">A neighbourhood park that used to be busy is now mostly empty. Which systems thinking question is most useful here?</p>
+  <p class="qs">Notice which question opens up the system, rather than closing it down.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(2,0,false)"><span class="ol">A</span>How do we increase programming in the park to attract more users?</button>
+    <button class="opt" onclick="ans(2,1,false)"><span class="ol">B</span>Which department is responsible for park maintenance?</button>
+    <button class="opt" onclick="ans(2,2,false)"><span class="ol">C</span>Has investment in the park decreased recently?</button>
+    <button class="opt" onclick="ans(2,3,true)"><span class="ol">D</span>What changed in the surrounding system — demographically, socially, or physically — that is producing this pattern?</button>
+  </div>
+  <div class="fb" id="fb2"></div>
+  <button class="nb" id="nb2" onclick="nxt(3)">Next →</button>
+</div>
+
+<div class="qp" id="q3">
+  <p class="qnum">Question 4</p>
+  <p class="qt">Which of the following best describes "interdependence" in an urban system?</p>
+  <p class="qs">Cities are webs, not trees.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(3,0,false)"><span class="ol">A</span>Different departments working together on the same project</button>
+    <button class="opt" onclick="ans(3,1,true)"><span class="ol">B</span>A change in one urban domain — housing, mobility, health — inevitably creates effects in other domains, whether intended or not</button>
+    <button class="opt" onclick="ans(3,2,false)"><span class="ol">C</span>Cities relying on each other for economic trade and knowledge exchange</button>
+    <button class="opt" onclick="ans(3,3,false)"><span class="ol">D</span>The dependence of a city on national government funding</button>
+  </div>
+  <div class="fb" id="fb3"></div>
+  <button class="nb" id="nb3" onclick="nxt(4)">Next →</button>
+</div>
+
+<div class="qp" id="q4">
+  <p class="qnum">Question 5</p>
+  <p class="qt">Why do "weak signals" matter more than visible crises in living systems thinking?</p>
+  <p class="qs">This is the core of what separates a learning city from a reactive city.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(4,0,false)"><span class="ol">A</span>Weak signals are cheaper to respond to than crises</button>
+    <button class="opt" onclick="ans(4,1,false)"><span class="ol">B</span>Crises are usually exaggerated by media — weak signals give a truer picture</button>
+    <button class="opt" onclick="ans(4,2,true)"><span class="ol">C</span>Weak signals are early indicators of structural patterns — by the time a crisis is visible, the underlying dynamic has usually been running for years</button>
+    <button class="opt" onclick="ans(4,3,false)"><span class="ol">D</span>Weak signals are easier to measure and track than crisis indicators</button>
+  </div>
+  <div class="fb" id="fb4"></div>
+  <button class="nb" id="nb4" onclick="nxt(5)">Next →</button>
+</div>
+
+<div class="qp" id="q5">
+  <p class="qnum">Question 6</p>
+  <p class="qt">A city improves street lighting in a declining area and crime drops in the first month. Six months later, crime is back to its original level. What most likely happened?</p>
+  <p class="qs">Test your understanding of system responses to interventions.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(5,0,false)"><span class="ol">A</span>The lighting quality deteriorated</button>
+    <button class="opt" onclick="ans(5,1,false)"><span class="ol">B</span>Criminal activity naturally cycles regardless of interventions</button>
+    <button class="opt" onclick="ans(5,2,true)"><span class="ol">C</span>The intervention addressed a symptom without changing the underlying pattern — the system adapted around it</button>
+    <button class="opt" onclick="ans(5,3,false)"><span class="ol">D</span>The initial drop was a statistical anomaly</button>
+  </div>
+  <div class="fb" id="fb5"></div>
+  <button class="nb" id="nb5" onclick="nxt(6)">Next →</button>
+</div>
+
+<div class="qp" id="q6">
+  <p class="qnum">Question 7</p>
+  <p class="qt">What does "adaptive capacity" mean in the context of a living city?</p>
+  <p class="qs">This is the ultimate measure of urban intelligence.</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(6,0,false)"><span class="ol">A</span>A city's ability to attract new investment and talent during a downturn</button>
+    <button class="opt" onclick="ans(6,1,false)"><span class="ol">B</span>The flexibility built into infrastructure projects to allow future modifications</button>
+    <button class="opt" onclick="ans(6,2,false)"><span class="ol">C</span>A city's resilience to natural disasters and climate shocks</button>
+    <button class="opt" onclick="ans(6,3,true)"><span class="ol">D</span>The ability to sense emerging patterns, interpret them, and adjust before pressure forces a reactive response</button>
+  </div>
+  <div class="fb" id="fb6"></div>
+  <button class="nb" id="nb6" onclick="showR()">See my results →</button>
+</div>
+
+<div class="rp" id="res">
+  <div class="rc">
+    <div class="rh">
+      <div class="sc-circle"><span class="sn" id="sn">0</span><span class="sd">/ 7</span></div>
+      <h2 id="rt">Your systems thinking baseline</h2>
+      <p id="rs"></p>
+    </div>
+    <div class="rb">
+      <div class="ml" id="ml"></div>
+      <div class="ri" id="ri"></div>
+      <div class="qrev"><h4>Your answers</h4><div id="rv"></div></div>
+      <div class="fs" id="fs"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+const qs=[
+  {s:"City intelligence is visible in",c:1,f:[
+    {t:'wrong',l:'Infrastructure ≠ intelligence',b:'Infrastructure is what a city has built. Intelligence is how it actually functions — and that lives in movement, not in what stands still.'},
+    {t:'correct',l:'Flows reveal the system',b:'Exactly. The four flows — people, information, resources, and emotions — are where a city\'s adaptive capacity (or lack of it) becomes visible. A city that cannot read its own flows cannot learn.'},
+    {t:'wrong',l:'Output ≠ intelligence',b:'GDP measures output, not the city\'s capacity to learn, adapt, and improve. A wealthy city can have deeply fragile systems.'},
+    {t:'wrong',l:'Administration ≠ intelligence',b:'Administrative efficiency is one component — but a well-run machine is still a machine. Intelligence requires the ability to sense, interpret, and adapt.'}
+  ]},
+  {s:"Reinforcing vs balancing loops",c:2,f:[
+    {t:'wrong',l:'Not about positive/negative',b:'Reinforcing loops are not inherently positive — they amplify whatever is already happening. A reinforcing loop around declining safety makes things worse, not better.'},
+    {t:'wrong',l:'Not about investment',b:'Both types of loops occur in all urban systems regardless of investment levels. The distinction is about how they respond to change — amplifying it or resisting it.'},
+    {t:'correct',l:'Precise distinction',b:'Correct. A reinforcing loop around overcrowded transit produces more overcrowding over time. A balancing loop around urban heat — planting trees to reduce temperature — seeks to return the system to stability.'},
+    {t:'wrong',l:'Not domain-specific',b:'Feedback loops occur in all domains simultaneously — physical, social, economic, institutional. Separating them by domain is mechanical thinking.'}
+  ]},
+  {s:"Empty park — most useful question",c:3,f:[
+    {t:'wrong',l:'Treating the symptom',b:'Increased programming addresses the visible symptom — an empty park — without understanding why the park became empty. The system may simply adapt around the new programming.'},
+    {t:'wrong',l:'Assigning responsibility',b:'Knowing which department is responsible is necessary for action, but it doesn\'t help you understand the pattern. In living systems, most problems cross departmental boundaries anyway.'},
+    {t:'wrong',l:'One variable, not a system',b:'Investment levels are relevant but partial. The park could have maintained investment and still emptied if surrounding demographics, safety perceptions, or community trust shifted.'},
+    {t:'correct',l:'Systems question',b:'This question opens up the full system. It asks about change — which is always systemic. The answer might reveal a demographic shift, a safety concern, a new competing space, or an eroded community connection. Any of those leads to a different intervention.'}
+  ]},
+  {s:"Interdependence definition",c:1,f:[
+    {t:'wrong',l:'Coordination ≠ interdependence',b:'Departments working together is collaboration — valuable, but not the same as interdependence. Interdependence exists whether or not anyone is coordinating — it is structural, not organisational.'},
+    {t:'correct',l:'Structural definition',b:'Correct. Interdependence means that no urban domain exists in isolation. A housing decision is a mobility decision is a health decision is a trust decision. The city is a web — pull one thread and the whole structure responds.'},
+    {t:'wrong',l:'Inter-city, not intra-city',b:'You\'re describing city networks — a different concept. Interdependence refers to the structural connections within a single city\'s systems.'},
+    {t:'wrong',l:'Dependency ≠ interdependence',b:'Financial dependency on national government is a power relationship, not a systems concept. Interdependence is about structural connections between urban domains.'}
+  ]},
+  {s:"Why weak signals matter more",c:2,f:[
+    {t:'wrong',l:'Not about cost',b:'The value of weak signals has nothing to do with the cost of response. A weak signal detected early can prevent a crisis that would cost far more — but the argument is about learning capacity, not budget.'},
+    {t:'wrong',l:'Not a media critique',b:'This conflates signal quality with media representation. Crises are real — the point is that they are usually the visible end of a pattern that was running long before the crisis became public.'},
+    {t:'correct',l:'Early structural indicators',b:'Exactly. A small decline in park usage, a quiet shift in commuting behaviour, a subtle change in institutional trust — these are the system communicating. By the time a crisis is visible, the loop has been running for years. Learning cities sense these patterns early. Reactive cities wait.'},
+    {t:'wrong',l:'Not about measurability',b:'Weak signals are often harder to measure than crisis indicators — they are qualitative, distributed, and easy to dismiss. Their value is not their measurability but their earliness.'}
+  ]},
+  {s:"Lighting improves then crime returns",c:2,f:[
+    {t:'wrong',l:'Possible but insufficient',b:'If the lighting quality deteriorated this quickly, the intervention was poorly implemented — but this doesn\'t explain the pattern systematically. The question is asking about systems dynamics.'},
+    {t:'wrong',l:'Assumes system neutrality',b:'Criminal activity does not cycle independently of conditions. It responds to structural factors — opportunity, surveillance, community presence, economic pressure. The system is not neutral.'},
+    {t:'correct',l:'System adaptation',b:'This is a classic systems response to symptom-level intervention. The underlying pattern — fragile community, eroded social infrastructure, economic marginalisation — was unchanged. The system adapted around the new lighting. Intelligent intervention would have targeted the structural conditions, not the visibility of the symptom.'},
+    {t:'wrong',l:'Avoids the systemic explanation',b:'Statistical anomaly is a way of denying that something systematic happened. In complex urban systems, patterns are almost never random — they are structural responses.'}
+  ]},
+  {s:"Adaptive capacity definition",c:3,f:[
+    {t:'wrong',l:'Attractiveness ≠ adaptiveness',b:'Attracting investment during a downturn is a form of resilience — but it is not the same as adaptive capacity. A city can attract investment and still fail to learn from its own patterns.'},
+    {t:'wrong',l:'Infrastructure flexibility ≠ adaptive capacity',b:'Built-in flexibility is design optionality — a component of adaptive capacity, not its definition. Adaptive capacity is systemic, not architectural.'},
+    {t:'wrong',l:'Disaster resilience is partial',b:'Disaster resilience is one application of adaptive capacity — but the concept is broader. It applies to economic shifts, social changes, governance failures, and slow-moving environmental pressures, not just sudden shocks.'},
+    {t:'correct',l:'Full definition',b:'Exactly. Adaptive capacity is the city\'s ability to learn before it is forced to. It requires sensing (noticing weak signals), interpreting (understanding the pattern), and adjusting (acting before collapse). Learning cities have it. Reactive cities don\'t.'}
+  ]}
+];
+const ua=[];
+function ans(qi,oi,correct){
+  const p=document.getElementById('q'+qi);
+  p.querySelectorAll('.opt').forEach(o=>o.classList.add('disabled'));
+  p.querySelectorAll('.opt')[oi].classList.add(correct?'sc':'sw');
+  if(!correct)p.querySelectorAll('.opt')[qs[qi].c].classList.add('sk');
+  const f=qs[qi].f[oi];
+  const fb=document.getElementById('fb'+qi);
+  fb.className='fb show '+(correct?'correct':'wrong');
+  fb.innerHTML=`<div class="fbl">${f.l}</div><div class="fbb">${f.b}</div>`;
+  document.getElementById('nb'+qi).classList.add('show');
+  ua[qi]=correct;
+  document.getElementById('pf').style.width=((qi+1)/7*100)+'%';
+}
+function nxt(n){
+  document.getElementById('q'+(n-1)).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  document.getElementById('pc').textContent='Question '+(n+1)+' of 7';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showR(){
+  document.getElementById('q6').classList.remove('active');
+  document.getElementById('pf').style.width='100%';
+  document.getElementById('pc').textContent='Complete';
+  const score=ua.filter(Boolean).length;
+  document.getElementById('sn').textContent=score;
+  let title,sub,label,lstyle,insight,forward;
+  if(score>=6){
+    title='Strong systems thinker';sub='You\'re already reading the city as a living system.';
+    label='🌱 Systems thinker';lstyle='background:var(--teal-light);color:var(--teal-dark)';
+    insight='You have a solid grasp of feedback loops, interdependence, and why weak signals matter more than crises. <strong>Section 03 will put this understanding to work</strong> — moving from seeing systems to intervening in them intelligently.';
+    forward='<strong>Your next step:</strong> In Section 03, focus on the three shifts. You already see the system — now learn to find the leverage point inside it.';
+  } else if(score>=4){
+    title='Developing systems awareness';sub='The key concepts are landing — some edges still to sharpen.';
+    label='🔄 Developing';lstyle='background:var(--amber-pale);color:var(--amber-dark)';
+    insight='You\'re building a solid foundation. The concepts of feedback loops and interdependence are becoming clear. <strong>The distinction between symptom-level and structural intervention</strong> is the most important edge to sharpen — it will matter a lot in Section 03.';
+    forward='<strong>Your next step:</strong> Before moving to Section 03, revisit the idea of adaptive capacity — it connects everything you\'ve learned here.';
+  } else {
+    title='The shift is beginning';sub='These ideas take time. You\'re in the right place.';
+    label='⚙️ Building foundations';lstyle='background:var(--purple-pale);color:var(--purple-dark)';
+    insight='Systems thinking is genuinely counter-intuitive at first — you\'re trained to see problems and fix them. The shift to seeing patterns and understanding structures takes repetition. <strong>This is exactly what the next sections are built for.</strong>';
+    forward='<strong>Your next step:</strong> Consider revisiting the Section 02 bonus material before continuing — the Living System mapping tool will make the concepts more tangible.';
+  }
+  document.getElementById('rt').textContent=title;
+  document.getElementById('rs').textContent=sub;
+  document.getElementById('ml').textContent=label;
+  document.getElementById('ml').style.cssText=lstyle+';padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;';
+  document.getElementById('ri').innerHTML=insight;
+  document.getElementById('fs').innerHTML=forward;
+  document.getElementById('rv').innerHTML=qs.map((q,i)=>`<div class="ritem"><span class="rdot ${ua[i]?'dot-c':'dot-w'}"></span><span class="rq">${q.s}</span></div>`).join('');
+  document.getElementById('res').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

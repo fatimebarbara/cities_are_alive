@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Exercise: Define Your First Intelligent Intervention</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --teal:#1D9E75;--teal-dark:#0F6E56;--teal-deep:#04342C;--teal-light:#E1F5EE;--teal-pale:#F2FBF7;
+    --amber:#EF9F27;--amber-pale:#FAEEDA;--amber-dark:#BA7517;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-dark:#3C3489;
+    --text-dark:#1A1A1A;--text-mid:#444;--text-light:#888;
+    --bg:#F8F9F6;--white:#fff;--border:rgba(0,0,0,0.08)
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-dark);line-height:1.7;min-height:100vh}
+  header{background:var(--teal-deep);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(255,255,255,.012) 40px,rgba(255,255,255,.012) 80px)}
+  .hi{max-width:660px;margin:0 auto;position:relative;z-index:1}
+  .ctag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);display:block;margin-bottom:.75rem}
+  .sbadge{display:inline-flex;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:11px;padding:4px 10px;border-radius:20px;margin-bottom:1.25rem}
+  header h1{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.3rem);color:#fff;line-height:1.2;margin-bottom:.75rem}
+  header h1 em{font-style:italic;color:#9FE1CB}
+  header p{color:rgba(255,255,255,.65);font-size:.9rem;font-weight:300;max-width:460px}
+  .pw{max-width:660px;margin:0 auto;padding:1.25rem 1.5rem 0}
+  .pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .pl{font-size:12px;color:var(--text-light)}
+  .pc{font-size:12px;font-weight:500;color:var(--teal-dark)}
+  .ptr{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+  .pf{height:100%;background:var(--teal);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+  main{max-width:660px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  .intro-banner{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:2rem;font-size:.9rem;color:var(--text-mid);line-height:1.7}
+  .intro-banner strong{color:var(--teal-dark)}
+  .qp{display:none;animation:fu .35s ease}
+  .qp.active{display:block}
+  @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .step-card{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:1.5rem}
+  .step-top{background:var(--teal-deep);padding:1.4rem 1.75rem;display:flex;align-items:center;gap:1rem;color:#fff}
+  .step-orb{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;flex-shrink:0}
+  .step-top h2{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:2px}
+  .step-top p{font-size:.82rem;opacity:.7}
+  .step-body{padding:1.5rem 1.75rem}
+  .prompt-context{background:var(--teal-pale);border:1px solid #9FE1CB;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.85rem;color:var(--teal-dark);line-height:1.6}
+  .prompt-context strong{font-weight:500}
+  .fl{font-size:.82rem;font-weight:500;color:var(--text-mid);margin-bottom:6px;margin-top:1rem}
+  .fl:first-of-type{margin-top:0}
+  textarea.wf{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text-dark);resize:vertical;min-height:80px;background:var(--bg);outline:none;transition:border-color .2s;margin-bottom:1rem;line-height:1.6}
+  textarea.wf:focus{border-color:var(--teal);background:#fff}
+  .pillar-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+  .pc-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-mid);cursor:pointer;transition:all .15s}
+  .pc-btn:hover{border-color:var(--teal);color:var(--teal-dark)}
+  .pc-btn.sel{background:var(--teal-dark);border-color:var(--teal-dark);color:#fff}
+  .nav-row{display:flex;gap:10px;margin-top:1rem}
+  .btn-back{padding:10px 20px;border-radius:24px;border:1.5px solid var(--border);background:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text-mid);cursor:pointer;transition:all .2s}
+  .btn-back:hover{border-color:var(--teal);color:var(--teal-dark)}
+  .btn-next{padding:10px 24px;border-radius:24px;border:none;background:var(--teal-dark);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#fff;cursor:pointer;transition:background .2s}
+  .btn-next:hover{background:var(--teal)}
+  /* COMPLETION CARD */
+  .completion{background:var(--white);border:1px solid var(--border);border-radius:24px;overflow:hidden;display:none;animation:fu .4s ease}
+  .completion.show{display:block}
+  .comp-header{background:var(--teal-deep);padding:2.5rem 2rem;color:#fff;text-align:center}
+  .comp-icon{font-size:3rem;display:block;margin-bottom:1rem}
+  .comp-header h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:.5rem}
+  .comp-header h2 em{font-style:italic;color:#9FE1CB}
+  .comp-header p{font-size:.9rem;opacity:.7;max-width:400px;margin:0 auto}
+  .comp-body{padding:2rem}
+  .intervention-row{display:flex;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+  .intervention-row:last-child{border-bottom:none}
+  .ir-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);width:100px;flex-shrink:0;padding-top:2px;font-weight:500}
+  .ir-value{font-size:.9rem;color:var(--text-mid);flex:1;line-height:1.65}
+  .ir-value strong{color:var(--teal-dark)}
+  .completion-seal{background:var(--teal-pale);border:1px solid #9FE1CB;border-radius:16px;padding:1.5rem;margin-top:1.5rem;text-align:center}
+  .seal-quote{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--teal-dark);font-style:italic;margin-bottom:.5rem}
+  .seal-attribution{font-size:.82rem;color:var(--text-light)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <span class="ctag">Cities Are Alive · Section 05</span>
+    <div class="sbadge">✅ Final Exercise</div>
+    <h1>Define Your First<br><em>Intelligent Intervention</em></h1>
+    <p>Four questions. One complete, concrete, systemic action — in your own city context. This is where the course becomes practice.</p>
+  </div>
+</header>
+<div class="pw">
+  <div class="pt"><span class="pl">Exercise progress</span><span class="pc" id="pc">Step 1 of 4</span></div>
+  <div class="ptr"><div class="pf" id="pf" style="width:0%"></div></div>
+</div>
+<main>
+
+<div class="intro-banner">
+  <strong>This is not a knowledge test.</strong> There are no right answers. This exercise asks you to synthesise everything from the course — the lens shift, the living systems framework, the three shifts, the CII, the postures — and produce one real, grounded, systemic action you could take in your own context. Take your time.
+</div>
+
+<div class="qp active" id="q0">
+  <div class="step-card">
+    <div class="step-top">
+      <div class="step-orb">1</div>
+      <div><h2>The signal</h2><p>What is the city problem you are going to work with?</p></div>
+    </div>
+    <div class="step-body">
+      <div class="prompt-context"><strong>Remember:</strong> Don't describe the symptom — describe the signal behind it. Not "there is too much traffic" but "traffic is a symptom of misaligned land use, mobility culture, and governance fragmentation that has been reinforcing for two decades."</div>
+      <p class="fl">Describe the challenge you're choosing — and the pattern or feedback loop you believe is producing it</p>
+      <textarea class="wf" id="f0a" placeholder="Name the challenge, then go one level deeper: what structural dynamic is producing it? What feedback loop is running?"></textarea>
+      <p class="fl">Which CII pillar does this challenge most directly touch?</p>
+      <div class="pillar-chips" id="pc0">
+        <button class="pc-btn" onclick="selPillar(0,this,'🌱 Foundational')">🌱 Foundational</button>
+        <button class="pc-btn" onclick="selPillar(0,this,'💡 Innovator')">💡 Innovator</button>
+        <button class="pc-btn" onclick="selPillar(0,this,'🔗 Integrator')">🔗 Integrator</button>
+        <button class="pc-btn" onclick="selPillar(0,this,'♻️ Regenerative')">♻️ Regenerative</button>
+        <button class="pc-btn" onclick="selPillar(0,this,'🌐 Connected')">🌐 Connected</button>
+        <button class="pc-btn" onclick="selPillar(0,this,'❤️ Healthy Society')">❤️ Healthy Society</button>
+      </div>
+      <div class="nav-row"><button class="btn-next" onclick="goTo(1)">Next: The leverage point →</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="qp" id="q1">
+  <div class="step-card">
+    <div class="step-top">
+      <div class="step-orb">2</div>
+      <div><h2>The leverage point</h2><p>Where in the system would a precise, small action shift the whole pattern?</p></div>
+    </div>
+    <div class="step-body">
+      <div class="prompt-context"><strong>Remember:</strong> Leverage hides in structure, not scale. It is rarely the most obvious action. It is often in governance, incentives, feedback mechanisms, or trust infrastructure — the parts of the system that determine how everything else behaves.</div>
+      <p class="fl">Where is the leverage point — the structural location where a small, precise action could shift the pattern?</p>
+      <textarea class="wf" id="f1a" placeholder="Not the symptom-level fix — the structural position in the system where intervention would change how the system behaves, not just what it produces."></textarea>
+      <p class="fl">Why is this a leverage point rather than a symptom-level fix?</p>
+      <textarea class="wf" id="f1b" placeholder="What feedback loop does it interrupt or redirect? What systemic behaviour changes if you act here?"></textarea>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(0)">← Back</button>
+        <button class="btn-next" onclick="goTo(2)">Next: Your first move →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="qp" id="q2">
+  <div class="step-card">
+    <div class="step-top">
+      <div class="step-orb">3</div>
+      <div><h2>Your first intelligent move</h2><p>The smallest action you could take in the next 30 days that would begin to shift this.</p></div>
+    </div>
+    <div class="step-body">
+      <div class="prompt-context"><strong>Remember:</strong> A First Intelligent Move is not the biggest thing you could do. It is the most precisely placed thing you can do <em>now</em> — small enough to be real, precise enough to matter. It creates the conditions for the second move, not just a visible output.</div>
+      <p class="fl">What is your First Intelligent Move — specific, concrete, doable in 30 days?</p>
+      <textarea class="wf" id="f2a" placeholder="Name the action. Who does it involve? What does it target? What would be different after you do it?"></textarea>
+      <p class="fl">How will you know it has shifted something — what signal will you look for?</p>
+      <textarea class="wf" id="f2b" placeholder="Not a grand outcome metric — a small, observable signal that tells you the system has responded. Even a change in conversation quality counts."></textarea>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(1)">← Back</button>
+        <button class="btn-next" onclick="goTo(3)">Next: Your commitment →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="qp" id="q3">
+  <div class="step-card">
+    <div class="step-top">
+      <div class="step-orb">4</div>
+      <div><h2>Your commitment</h2><p>The posture you'll bring. The practice you'll sustain.</p></div>
+    </div>
+    <div class="step-body">
+      <div class="prompt-context"><strong>This is the last question of the course.</strong> It asks not what you will do, but who you will be while doing it — and how you will hold the City Intelligence lens when the institutional pressure to revert is strongest.</div>
+      <p class="fl">Which professional posture does your First Intelligent Move require — and why?</p>
+      <div class="pillar-chips">
+        <button class="pc-btn" onclick="selPillar(1,this,'⚙️ Optimiser')">⚙️ Optimiser</button>
+        <button class="pc-btn" onclick="selPillar(1,this,'🌉 Translator')">🌉 Translator</button>
+        <button class="pc-btn" onclick="selPillar(1,this,'🌿 Steward')">🌿 Steward</button>
+        <button class="pc-btn" onclick="selPillar(1,this,'👂 Systems Listener')">👂 Systems Listener</button>
+      </div>
+      <p class="fl">What will make this hard — and how will you hold your ground?</p>
+      <textarea class="wf" id="f3a" placeholder="Name the institutional, political, or personal resistance you'll face. What will make you want to revert to symptom-level action? And what will remind you to hold the systemic frame?"></textarea>
+      <p class="fl">One sentence: your commitment to the cities and people you work with</p>
+      <textarea class="wf" id="f3b" style="min-height:60px" placeholder="Not a professional objective — a human one. What do the people in your city deserve from how you show up to this work?"></textarea>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(2)">← Back</button>
+        <button class="btn-next" onclick="complete()">Complete the course →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="completion" id="comp">
+  <div class="comp-header">
+    <span class="comp-icon">🌱</span>
+    <h2>Cities Are Alive — <em>Complete</em></h2>
+    <p>You have defined your First Intelligent Intervention. This is where the course ends and the practice begins.</p>
+  </div>
+  <div class="comp-body">
+    <div id="compRows"></div>
+    <div class="completion-seal">
+      <div class="seal-quote">"The future of cities will be shaped by those willing to hold complexity with care and curiosity."</div>
+      <div class="seal-attribution">— Cities Are Alive</div>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+const pillars=['','','','',''];
+function selPillar(idx,btn,name){
+  btn.closest('.pillar-chips,.step-body').querySelectorAll('.pc-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  pillars[idx]=name;
+}
+function goTo(n){
+  document.querySelectorAll('.qp').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.getElementById('pc').textContent='Step '+(n+1)+' of 4';
+  document.getElementById('pf').style.width=((n+1)/4*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function v(id){return (document.getElementById(id)||{}).value||'—';}
+function complete(){
+  document.querySelectorAll('.qp').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pf').style.width='100%';
+  document.getElementById('pc').textContent='Complete ✓';
+  const rows=[
+    {label:'CII Pillar',value:'<strong>'+(pillars[0]||'Not selected')+'</strong>'},
+    {label:'The signal',value:v('f0a')},
+    {label:'Leverage point',value:v('f1a')},
+    {label:'Why leverage',value:v('f1b')},
+    {label:'First move',value:'<strong>'+v('f2a')+'</strong>'},
+    {label:'Success signal',value:v('f2b')},
+    {label:'Posture',value:'<strong>'+(pillars[1]||'Not selected')+'</strong>'},
+    {label:'Resistance',value:v('f3a')},
+    {label:'Commitment',value:'<em>'+v('f3b')+'</em>'}
+  ];
+  document.getElementById('compRows').innerHTML=rows.map(r=>`
+    <div class="intervention-row">
+      <div class="ir-label">${r.label}</div>
+      <div class="ir-value">${r.value}</div>
+    </div>
+  `).join('');
+  document.getElementById('comp').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply the Three Shifts: From Insight to Action</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --teal:#1D9E75;--teal-dark:#0F6E56;--teal-deep:#04342C;--teal-light:#E1F5EE;--teal-pale:#F2FBF7;
+    --amber:#EF9F27;--amber-pale:#FAEEDA;--amber-dark:#BA7517;
+    --coral:#D85A30;--coral-pale:#FAECE7;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-dark:#3C3489;
+    --text-dark:#1A1A1A;--text-mid:#444;--text-light:#888;
+    --bg:#F8F9F6;--white:#fff;--border:rgba(0,0,0,0.08)
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-dark);line-height:1.7;min-height:100vh}
+  header{background:var(--amber-dark);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06)}
+  .hi{max-width:660px;margin:0 auto;position:relative;z-index:1}
+  .ctag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);display:block;margin-bottom:.75rem}
+  .sbadge{display:inline-flex;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:11px;padding:4px 10px;border-radius:20px;margin-bottom:1.25rem}
+  header h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4vw,2.1rem);color:#fff;line-height:1.2;margin-bottom:.5rem}
+  header p{color:rgba(255,255,255,.65);font-size:.9rem;font-weight:300;max-width:460px}
+  .shift-indicator{display:flex;gap:8px;flex-wrap:wrap;padding:1rem 2rem;background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.08);max-width:none}
+  .si{padding:4px 12px;border-radius:16px;font-size:11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);transition:all .3s}
+  .si.active-shift{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.25)}
+  .pw{max-width:660px;margin:0 auto;padding:1.25rem 1.5rem 0}
+  .pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .pl{font-size:12px;color:var(--text-light)}
+  .pc{font-size:12px;font-weight:500;color:var(--amber-dark)}
+  .ptr{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+  .pf{height:100%;background:var(--amber);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+  main{max-width:660px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  .shift-tag{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;margin-bottom:.75rem;background:var(--amber-pale);color:var(--amber-dark)}
+  .qp{display:none;animation:fu .35s ease}
+  .qp.active{display:block}
+  @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .qnum{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber-dark);font-weight:500;margin-bottom:.75rem}
+  .qt{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,3vw,1.35rem);color:var(--text-dark);line-height:1.4;margin-bottom:.4rem}
+  .qs{font-size:.85rem;color:var(--text-light);margin-bottom:1.75rem;font-style:italic}
+  .scenario-box{background:var(--amber-pale);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.87rem;color:var(--text-mid);line-height:1.6}
+  .scenario-box strong{color:var(--amber-dark)}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+  .opt{padding:1rem 1.25rem;background:var(--white);border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-size:.9rem;color:var(--text-dark);line-height:1.5;text-align:left;font-family:'DM Sans',sans-serif}
+  .opt:hover{border-color:var(--amber);background:var(--amber-pale)}
+  .opt.sc{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark)}
+  .opt.sw{border-color:var(--coral);background:var(--coral-pale);color:var(--coral)}
+  .opt.sk{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark);opacity:.6}
+  .opt.disabled{cursor:default;pointer-events:none}
+  .ol{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;color:var(--text-light);transition:all .18s}
+  .opt:hover .ol{border-color:var(--amber);color:var(--amber-dark)}
+  .opt.sc .ol{background:var(--teal-dark);border-color:var(--teal-dark);color:#fff}
+  .opt.sw .ol{background:var(--coral);border-color:var(--coral);color:#fff}
+  .opt.sk .ol{background:var(--teal);border-color:var(--teal);color:#fff}
+  .fb{border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.7;display:none;animation:fu .3s ease}
+  .fb.show{display:block}
+  .fb.correct{background:var(--teal-light);border:1px solid #9FE1CB;color:var(--teal-dark)}
+  .fb.wrong{background:var(--coral-pale);border:1px solid #F5C4B3;color:var(--coral)}
+  .fbl{font-weight:500;margin-bottom:4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+  .fbb{color:var(--text-mid)}
+  .fb.correct .fbb{color:var(--teal-dark)}
+  .nb{display:none;width:100%;padding:13px;background:var(--amber-dark);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;color:#fff;cursor:pointer;transition:background .2s}
+  .nb.show{display:block}
+  .nb:hover{background:var(--amber)}
+  .rp{display:none;animation:fu .4s ease}
+  .rp.active{display:block}
+  .rc{background:var(--white);border:1px solid var(--border);border-radius:24px;overflow:hidden}
+  .rh{background:var(--teal-deep);padding:2rem;color:#fff;text-align:center}
+  .sc-circle{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;flex-direction:column}
+  .sn{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1}
+  .sd{font-size:12px;opacity:.65}
+  .rh h2{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:6px}
+  .rh p{font-size:.85rem;opacity:.7}
+  .rb{padding:2rem}
+  .ml{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;margin-bottom:1.25rem}
+  .ri{font-size:.92rem;color:var(--text-mid);line-height:1.75;margin-bottom:1.5rem}
+  .ri strong{color:var(--teal-dark)}
+  .shift-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+  .ss-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+  .ss-label{font-size:.75rem;color:var(--text-light);margin-bottom:6px}
+  .ss-score{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700}
+  .ss-card.strong .ss-score{color:var(--teal-dark)}
+  .ss-card.mid .ss-score{color:var(--amber-dark)}
+  .ss-card.weak .ss-score{color:var(--coral)}
+  .qrev h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);margin-bottom:1rem;font-weight:500}
+  .ritem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem;align-items:flex-start}
+  .ritem:last-child{border-bottom:none}
+  .rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px}
+  .dot-c{background:var(--teal)}.dot-w{background:var(--coral)}
+  .rq{color:var(--text-mid);flex:1}
+  .fs{background:var(--amber-pale);border:1px solid #FAC775;border-radius:14px;padding:1.25rem 1.5rem;margin-top:1.5rem;font-size:.88rem;color:var(--amber-dark);line-height:1.7}
+  .fs strong{display:block;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;opacity:.7}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <span class="ctag">Cities Are Alive · Section 03</span>
+    <div class="sbadge">✅ Applied Exercise</div>
+    <h1>Apply the Three Shifts</h1>
+    <p>Nine scenario-based questions. Test your ability to identify leverage, sequence interventions, and use the CII diagnostically.</p>
+  </div>
+  <div class="shift-indicator">
+    <span class="si active-shift" id="si0">Shift 1: Problems → Leverage</span>
+    <span class="si" id="si1">Shift 2: Reactions → Sequence</span>
+    <span class="si" id="si2">Shift 3: Projects → Systems</span>
+  </div>
+</header>
+<div class="pw">
+  <div class="pt"><span class="pl">Progress</span><span class="pc" id="pc">Question 1 of 9</span></div>
+  <div class="ptr"><div class="pf" id="pf" style="width:0%"></div></div>
+</div>
+<main>
+
+<!-- SHIFT 1: Q1-3 -->
+<div class="qp active" id="q0">
+  <span class="shift-tag">Shift 1 — Problems to leverage</span>
+  <p class="qnum">Question 1</p>
+  <p class="qt">A city has rising youth unemployment. The standard response is a skills training programme. What would a leverage-point thinker ask first?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(0,0,false)"><span class="ol">A</span>Which skills are most in demand in our local economy?</button>
+    <button class="opt" onclick="ans(0,1,false)"><span class="ol">B</span>How many young people can we train per year with our current budget?</button>
+    <button class="opt" onclick="ans(0,2,true)"><span class="ol">C</span>What structural conditions are producing youth unemployment — and would a training programme change those conditions, or just produce trained people into a system that can't absorb them?</button>
+    <button class="opt" onclick="ans(0,3,false)"><span class="ol">D</span>Which other cities have the best youth employment programmes we could replicate?</button>
+  </div>
+  <div class="fb" id="fb0"></div>
+  <button class="nb" id="nb0" onclick="nxt(1)">Next →</button>
+</div>
+
+<div class="qp" id="q1">
+  <span class="shift-tag">Shift 1 — Problems to leverage</span>
+  <p class="qnum">Question 2</p>
+  <p class="qt">Which of the following best describes a "leverage point" in a city system?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(1,0,false)"><span class="ol">A</span>The most expensive intervention with the widest reach</button>
+    <button class="opt" onclick="ans(1,1,true)"><span class="ol">B</span>The smallest, most precisely placed action that shifts the whole pattern producing an outcome</button>
+    <button class="opt" onclick="ans(1,2,false)"><span class="ol">C</span>The most politically popular solution to a visible problem</button>
+    <button class="opt" onclick="ans(1,3,false)"><span class="ol">D</span>Any action that produces measurable results within one budget cycle</button>
+  </div>
+  <div class="fb" id="fb1"></div>
+  <button class="nb" id="nb1" onclick="nxt(2)">Next →</button>
+</div>
+
+<div class="qp" id="q2">
+  <span class="shift-tag">Shift 1 — Problems to leverage</span>
+  <p class="qnum">Question 3</p>
+  <div class="scenario-box"><strong>Scenario:</strong> A city builds more parking to reduce congestion in the city centre. Six months later, congestion is worse than before.</div>
+  <p class="qt">What systemic dynamic best explains this outcome?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(2,0,false)"><span class="ol">A</span>The parking was built in the wrong locations</button>
+    <button class="opt" onclick="ans(2,1,true)"><span class="ol">B</span>More parking induced more car use — a reinforcing loop that amplified the original problem</button>
+    <button class="opt" onclick="ans(2,2,false)"><span class="ol">C</span>The city's population grew faster than anticipated</button>
+    <button class="opt" onclick="ans(2,3,false)"><span class="ol">D</span>The intervention needed more time to produce results</button>
+  </div>
+  <div class="fb" id="fb2"></div>
+  <button class="nb" id="nb2" onclick="nxt(3)">Next →</button>
+</div>
+
+<!-- SHIFT 2: Q4-6 -->
+<div class="qp" id="q3">
+  <span class="shift-tag">Shift 2 — Reactions to sequence</span>
+  <p class="qnum">Question 4</p>
+  <p class="qt">Why does sequencing matter in urban interventions?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(3,0,false)"><span class="ol">A</span>Because doing things in the right order saves money</button>
+    <button class="opt" onclick="ans(3,1,false)"><span class="ol">B</span>Because political cycles require certain actions to happen before elections</button>
+    <button class="opt" onclick="ans(3,2,true)"><span class="ol">C</span>Because complex systems contain delays — and acting in the wrong order either reinforces the problem or produces results that the system hasn't yet developed the capacity to sustain</button>
+    <button class="opt" onclick="ans(3,3,false)"><span class="ol">D</span>Because stakeholders need time to adjust to each change before the next one is introduced</button>
+  </div>
+  <div class="fb" id="fb3"></div>
+  <button class="nb" id="nb3" onclick="nxt(4)">Next →</button>
+</div>
+
+<div class="qp" id="q4">
+  <span class="shift-tag">Shift 2 — Reactions to sequence</span>
+  <p class="qnum">Question 5</p>
+  <div class="scenario-box"><strong>Scenario:</strong> A city wants to improve its Healthy Society pillar. It plans to build new health centres, launch a mental health campaign, and reform school nutrition simultaneously.</div>
+  <p class="qt">What is the risk of this approach from a sequencing perspective?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(4,0,false)"><span class="ol">A</span>It is too ambitious and will face political resistance</button>
+    <button class="opt" onclick="ans(4,1,false)"><span class="ol">B</span>The budget will be spread too thin across three initiatives</button>
+    <button class="opt" onclick="ans(4,2,true)"><span class="ol">C</span>Without identifying which intervention creates the conditions for the others to work, the city may invest heavily in parallel actions that each require the other to succeed first</button>
+    <button class="opt" onclick="ans(4,3,false)"><span class="ol">D</span>Community consultation hasn't been included in the planning</button>
+  </div>
+  <div class="fb" id="fb4"></div>
+  <button class="nb" id="nb4" onclick="nxt(5)">Next →</button>
+</div>
+
+<div class="qp" id="q5">
+  <span class="shift-tag">Shift 2 — Reactions to sequence</span>
+  <p class="qnum">Question 6</p>
+  <p class="qt">What is a "First Intelligent Move" in the context of the CII Improvement Plan?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(5,0,false)"><span class="ol">A</span>The most impactful action you can take in your first year in a new role</button>
+    <button class="opt" onclick="ans(5,1,false)"><span class="ol">B</span>The action that will generate the most political support for your programme</button>
+    <button class="opt" onclick="ans(5,2,true)"><span class="ol">C</span>The smallest, most precisely placed action that shifts a feedback loop and creates the conditions for a larger second move</button>
+    <button class="opt" onclick="ans(5,3,false)"><span class="ol">D</span>The first item on the implementation timeline, regardless of its systemic position</button>
+  </div>
+  <div class="fb" id="fb5"></div>
+  <button class="nb" id="nb5" onclick="nxt(6)">Next →</button>
+</div>
+
+<!-- SHIFT 3: Q7-9 -->
+<div class="qp" id="q6">
+  <span class="shift-tag">Shift 3 — Projects to systems</span>
+  <p class="qnum">Question 7</p>
+  <p class="qt">A city claims to have a strong Innovator Intelligence because it has several successful tech startups and a new innovation district. What would a CII-informed analyst want to know?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(6,0,false)"><span class="ol">A</span>How many jobs the startups have created</button>
+    <button class="opt" onclick="ans(6,1,false)"><span class="ol">B</span>Whether the innovation district has attracted international investment</button>
+    <button class="opt" onclick="ans(6,2,true)"><span class="ol">C</span>Whether innovation capacity is distributed across the city's population, or concentrated in a narrow ecosystem disconnected from foundational intelligence</button>
+    <button class="opt" onclick="ans(6,3,false)"><span class="ol">D</span>How the district compares to similar initiatives in other European cities</button>
+  </div>
+  <div class="fb" id="fb6"></div>
+  <button class="nb" id="nb6" onclick="nxt(7)">Next →</button>
+</div>
+
+<div class="qp" id="q7">
+  <span class="shift-tag">Shift 3 — Projects to systems</span>
+  <p class="qnum">Question 8</p>
+  <div class="scenario-box"><strong>Scenario:</strong> A city scores very high on Connected Intelligence (global networks, international partnerships, digital infrastructure) but very low on Foundational Intelligence (trust, digital access, civic participation).</div>
+  <p class="qt">What does this CII profile reveal about the city's systemic risk?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(7,0,false)"><span class="ol">A</span>The city is globally competitive but should invest more in community programmes</button>
+    <button class="opt" onclick="ans(7,1,true)"><span class="ol">B</span>The city's global connectivity is built on a fragile foundation — without civic trust and participation, it cannot translate external intelligence into internal improvement</button>
+    <button class="opt" onclick="ans(7,2,false)"><span class="ol">C</span>This is a common pattern — global cities often sacrifice local community for international competitiveness</button>
+    <button class="opt" onclick="ans(7,3,false)"><span class="ol">D</span>The city should focus on marketing its international strengths to attract more investment</button>
+  </div>
+  <div class="fb" id="fb7"></div>
+  <button class="nb" id="nb7" onclick="nxt(8)">Next →</button>
+</div>
+
+<div class="qp" id="q8">
+  <span class="shift-tag">Shift 3 — Projects to systems</span>
+  <p class="qnum">Question 9</p>
+  <p class="qt">What does the third shift — from projects to systems — ultimately require of a city leader?</p>
+  <div class="opts">
+    <button class="opt" onclick="ans(8,0,false)"><span class="ol">A</span>A larger budget and a longer planning horizon</button>
+    <button class="opt" onclick="ans(8,1,false)"><span class="ol">B</span>More data and better analytics infrastructure</button>
+    <button class="opt" onclick="ans(8,2,false)"><span class="ol">C</span>Political consensus across all departments before acting</button>
+    <button class="opt" onclick="ans(8,3,true)"><span class="ol">D</span>The discipline to stop measuring success by outputs and start measuring it by whether the city's structural capacity to learn and adapt is improving</button>
+  </div>
+  <div class="fb" id="fb8"></div>
+  <button class="nb" id="nb8" onclick="showR()">See my results →</button>
+</div>
+
+<div class="rp" id="res">
+  <div class="rc">
+    <div class="rh">
+      <div class="sc-circle"><span class="sn" id="sn">0</span><span class="sd">/ 9</span></div>
+      <h2 id="rt">Your Three Shifts profile</h2>
+      <p id="rs"></p>
+    </div>
+    <div class="rb">
+      <div class="shift-scores">
+        <div class="ss-card" id="ss0"><div class="ss-label">Shift 1: Leverage</div><div class="ss-score" id="s1s">—</div></div>
+        <div class="ss-card" id="ss1"><div class="ss-label">Shift 2: Sequence</div><div class="ss-score" id="s2s">—</div></div>
+        <div class="ss-card" id="ss2"><div class="ss-label">Shift 3: Systems</div><div class="ss-score" id="s3s">—</div></div>
+      </div>
+      <div class="ri" id="ri"></div>
+      <div class="qrev"><h4>Your answers</h4><div id="rv"></div></div>
+      <div class="fs" id="fs"></div>
+    </div>
+  </div>
+</div>
+</main>
+<script>
+const qs=[
+  {s:"Youth unemployment leverage question",c:2,shift:0,f:[
+    {t:'wrong',l:'Demand-side, not systemic',b:'Understanding labour demand is useful — but it doesn\'t tell you whether the system can absorb trained people. If the structural barriers to employment (hiring discrimination, lack of networks, credential mismatch) are unchanged, training produces frustrated graduates, not jobs.'},
+    {t:'wrong',l:'Capacity without leverage',b:'This is a resource question, not a systems question. How many people you can train is only useful if you know that training will actually change the pattern.'},
+    {t:'correct',l:'Structural question',b:'This is leverage thinking. It asks whether the proposed intervention will change the underlying structure — or whether it will produce skilled people into a system that still excludes them. The leverage point might be in employer incentives, hiring network access, or regulatory structure — not in training at all.'},
+    {t:'wrong',l:'Benchmarking without system understanding',b:'Replication without understanding context is one of the most common sources of policy failure. Another city\'s solution was a leverage point in their system. It may reinforce the wrong loop in yours.'}
+  ]},
+  {s:"Leverage point definition",c:1,f:[
+    {t:'wrong',l:'Scale ≠ leverage',b:'The most expensive intervention with the widest reach is often the least intelligent — it spreads force across the entire system without targeting the structural dynamic producing the problem.'},
+    {t:'correct',l:'Precise definition',b:'Exactly. Leverage is about precision and position, not scale. A small shift in institutional incentives, governance structure, or feedback mechanism can change system behaviour in ways that large infrastructure investments cannot.'},
+    {t:'wrong',l:'Political popularity ≠ leverage',b:'The most politically popular solution is almost always a symptom-level intervention — visible, fast, and reassuring. Leverage points are often invisible, slow to show results, and politically unrewarding in the short term.'},
+    {t:'wrong',l:'Speed ≠ leverage',b:'Short-cycle results are a political metric, not a systems metric. The most powerful leverage points often have delayed results — which is exactly why they\'re overlooked.'}
+  ]},
+  {s:"Parking induced congestion",c:1,f:[
+    {t:'wrong',l:'Location is secondary',b:'Location matters — but the fundamental dynamic here is systemic, not geographic. More parking of any kind, anywhere in the centre, induces more car use. The loop is about signal and behaviour, not placement.'},
+    {t:'correct',l:'Induced demand — reinforcing loop',b:'This is induced demand — one of the most well-documented reinforcing loops in urban systems. More parking signals "the city welcomes cars." More cars arrive. Congestion returns and often exceeds the original level. The city strengthened the loop it was trying to break.'},
+    {t:'wrong',l:'Population growth is a factor, not the cause',b:'Population growth may have played a role — but it doesn\'t explain why congestion worsened specifically after a parking intervention. The causal mechanism is the loop, not the growth rate.'},
+    {t:'wrong',l:'Systems respond faster than this',b:'Complex urban systems often respond quickly to capacity signals. Drivers adjust behaviour within weeks of new infrastructure opening. "More time" would not have changed the outcome — the loop was activated from day one.'}
+  ]},
+  {s:"Why sequencing matters",c:2,f:[
+    {t:'wrong',l:'Efficiency is secondary',b:'Cost savings are a byproduct of good sequencing, not its purpose. The reason sequencing matters is structural — the system has delays, and acting out of order produces misalignment between intervention and system state.'},
+    {t:'wrong',l:'Political cycles are real but secondary',b:'Political timing is a constraint on action — but it\'s not why sequencing matters systemically. The deeper reason is that systems have delays that are independent of election cycles.'},
+    {t:'correct',l:'System delays are the reason',b:'Correct. Systems contain behavioural delays (people take time to change habits), infrastructure delays (projects take years), and political delays (approval cycles slow momentum). If you act on Step 4 before Step 1 has created the necessary conditions, you invest in something the system cannot yet sustain.'},
+    {t:'wrong',l:'Stakeholder adjustment is a consideration, not the core',b:'Stakeholder management matters — but this is a political and communication consideration, not the systemic reason sequencing is essential. The core issue is that the system needs to develop certain capacities before others can take root.'}
+  ]},
+  {s:"Risk of simultaneous interventions",c:2,f:[
+    {t:'wrong',l:'Ambition is not the risk',b:'Ambition is not a systemic problem. The risk of this approach is structural — not political. Three ambitious initiatives can each be well-designed and still fail because they were not sequenced to build on each other.'},
+    {t:'wrong',l:'Budget spread is secondary',b:'Budget distribution is a resource planning concern. The structural risk is more fundamental: without sequencing, the city may discover that each intervention requires the other to have succeeded first.'},
+    {t:'correct',l:'Prerequisite failure',b:'Exactly. If mental health outcomes require better school nutrition (because malnutrition affects mental health) AND better school nutrition requires community health infrastructure (because it depends on parental trust in health systems), then all three need to be sequenced — not launched simultaneously. The First Intelligent Move creates the conditions for the second.'},
+    {t:'wrong',l:'Consultation is important but not the core risk here',b:'Community engagement is a process requirement. The structural risk being tested here is about sequencing — the order in which system conditions need to be created.'}
+  ]},
+  {s:"First Intelligent Move definition",c:2,f:[
+    {t:'wrong',l:'Role-based, not systemic',b:'The First Intelligent Move is not tied to professional tenure — it\'s a systems concept. It describes the structural position of an intervention, not its timing in someone\'s career.'},
+    {t:'wrong',l:'Political, not structural',b:'Political support is a resource — not a systems criterion. A First Intelligent Move might be politically costly but systemically essential. The CII approach does not subordinate systemic logic to political popularity.'},
+    {t:'correct',l:'Precise definition',b:'Correct. The First Intelligent Move is precise, not large. It targets a feedback loop — not a symptom. And its primary quality is that it changes the structural conditions for what comes next. It\'s the first step of a sequence, not a standalone action.'},
+    {t:'wrong',l:'Timeline position ≠ systemic position',b:'The first item on a timeline is a scheduling decision. The First Intelligent Move is a systems decision — it\'s the action that has the most structural leverage at the current state of the system.'}
+  ]},
+  {s:"Innovation district — what CII analyst asks",c:2,f:[
+    {t:'wrong',l:'Jobs are an output, not capacity',b:'Job creation is an output metric — it tells you what the system produced, not whether it has the structural capacity to keep producing. The CII asks about structural capacity, not current outputs.'},
+    {t:'wrong',l:'Investment is an input, not intelligence',b:'International investment is a resource flow — a component of Connected Intelligence. It doesn\'t tell you whether innovation is building systemic capacity or concentrating benefits in a narrow ecosystem.'},
+    {t:'correct',l:'Distribution and foundation',b:'This is the CII insight. A tech hub surrounded by low foundational intelligence — poor digital access, low trust, limited civic participation — is innovation for some, not innovation capacity for the city. The CII asks whether the pillar is building or extracting from the broader system.'},
+    {t:'wrong',l:'Benchmarking without context',b:'Comparison can inform — but the CII lens asks structural questions about this city\'s system, not relative ranking against peers.'}
+  ]},
+  {s:"High Connected, Low Foundational — systemic risk",c:1,f:[
+    {t:'wrong',l:'Community programmes are a symptom-level response',b:'This framing treats foundational intelligence as a social welfare concern. The CII frames it as systemic infrastructure. Low foundational intelligence doesn\'t just mean poor communities — it means the city cannot learn from or with its own residents.'},
+    {t:'correct',l:'Fragile foundation — structural risk',b:'Exactly. Connected Intelligence without Foundational Intelligence is a city that can bring global knowledge in but cannot distribute it, apply it, or learn from its own residents in return. The global connectivity amplifies the gap rather than reducing it. The CII identifies this as one of the highest-risk pillar combinations.'},
+    {t:'wrong',l:'Normalising the gap',b:'Treating this as a "common pattern" is exactly the machine-model thinking the CII challenges. Cities that accept this trade-off as inevitable produce widening inequality, eroding trust, and — eventually — the collapse of the very connectivity they were proud of.'},
+    {t:'wrong',l:'Marketing doesn\'t address structural fragility',b:'Attracting more investment into a system with fragile foundations amplifies the instability. The CII identifies this as a structural risk, not a communication opportunity.'}
+  ]},
+  {s:"Third shift — what it requires",c:3,f:[
+    {t:'wrong',l:'Resources are necessary but insufficient',b:'Budget and horizon matter — but a city with a large budget and a 30-year plan can still measure success entirely in outputs and miss the structural dynamics entirely.'},
+    {t:'wrong',l:'Data is necessary but insufficient',b:'Better analytics is a tool — it doesn\'t change what a city chooses to measure. The third shift is about changing the metric of success, not the sophistication of measurement.'},
+    {t:'wrong',l:'Consensus is a governance condition, not the core',b:'Political consensus is useful — but the third shift can happen within a single team or department, without city-wide consensus. It\'s a mindset shift, not a structural one.'},
+    {t:'correct',l:'The core of the third shift',b:'Exactly. The third shift requires the discipline to declare that "we built three schools" is not a measure of success if the educational system has not become more adaptive. The question shifts from "what did we deliver?" to "is the city\'s structural capacity to learn improving?" That is the hardest — and most important — shift of all.'}
+  ]}
+];
+const ua=[];
+function ans(qi,oi,correct){
+  const p=document.getElementById('q'+qi);
+  p.querySelectorAll('.opt').forEach(o=>o.classList.add('disabled'));
+  p.querySelectorAll('.opt')[oi].classList.add(correct?'sc':'sw');
+  if(!correct)p.querySelectorAll('.opt')[qs[qi].c].classList.add('sk');
+  const f=qs[qi].f[oi];
+  const fb=document.getElementById('fb'+qi);
+  fb.className='fb show '+(correct?'correct':'wrong');
+  fb.innerHTML=`<div class="fbl">${f.l}</div><div class="fbb">${f.b}</div>`;
+  document.getElementById('nb'+qi).classList.add('show');
+  ua[qi]=correct;
+  document.getElementById('pf').style.width=((qi+1)/9*100)+'%';
+  [document.getElementById('si0'),document.getElementById('si1'),document.getElementById('si2')].forEach((s,i)=>s.classList.remove('active-shift'));
+  const shift=qi<3?0:qi<6?1:2;
+  document.getElementById('si'+shift).classList.add('active-shift');
+}
+function nxt(n){
+  document.getElementById('q'+(n-1)).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  document.getElementById('pc').textContent='Question '+(n+1)+' of 9';
+  const shift=n<3?0:n<6?1:2;
+  [0,1,2].forEach(i=>document.getElementById('si'+i).classList.remove('active-shift'));
+  document.getElementById('si'+shift).classList.add('active-shift');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showR(){
+  document.getElementById('q8').classList.remove('active');
+  document.getElementById('pf').style.width='100%';
+  document.getElementById('pc').textContent='Complete';
+  const score=ua.filter(Boolean).length;
+  document.getElementById('sn').textContent=score;
+  const s1=ua.slice(0,3).filter(Boolean).length;
+  const s2=ua.slice(3,6).filter(Boolean).length;
+  const s3=ua.slice(6,9).filter(Boolean).length;
+  ['s1s','s2s','s3s'].forEach((id,i)=>{
+    const v=[s1,s2,s3][i];
+    const el=document.getElementById(id);
+    el.textContent=v+'/3';
+    const card=document.getElementById('ss'+i);
+    card.className='ss-card '+(v===3?'strong':v>=2?'mid':'weak');
+  });
+  let title,sub,insight,forward;
+  if(score>=8){
+    title='Strong practitioner of the three shifts';sub='You can see leverage, sequence with intention, and read the system.';
+    insight='You have a strong command of all three shifts. <strong>Section 04</strong> will add the final dimension: the professional mindset that sustains this thinking under real political and institutional pressure.';
+    forward='<strong>Your next step:</strong> Pay attention to the four postures in Section 04 — particularly Steward and Systems Listener. These are the postures that protect leverage thinking when organisations want quick fixes.';
+  } else if(score>=5){
+    title='Solid grasp with edges to sharpen';sub='Two of the three shifts are landing clearly — one needs more practice.';
+    const weakShift=['Leverage','Sequence','Systems'][[[s1,s2,s3].indexOf(Math.min(s1,s2,s3))]];
+    insight=`Your understanding of the three shifts is developing well. <strong>The ${weakShift} shift</strong> is where most of your missed questions cluster — focus your reflection there before moving to Section 04.`;
+    forward='<strong>Your next step:</strong> Use the Section 03 bonus material to work through a real example from your own context — the 7-step process will consolidate what the quiz has surfaced.';
+  } else {
+    title='The shifts are taking shape';sub='These are genuinely difficult conceptual moves. Keep going.';
+    insight='The three shifts are counter-intuitive — they ask you to act against trained instincts that value speed, scale, and visible output. <strong>This is the hardest intellectual work of the course.</strong> The bonus materials in Section 03 will make these abstract principles concrete.';
+    forward='<strong>Your next step:</strong> Before continuing, work through the CII Six Pillars bonus material — understanding the structural logic of the CII will make the three shifts much more tangible.';
+  }
+  document.getElementById('rt').textContent=title;
+  document.getElementById('rs').textContent=sub;
+  document.getElementById('ri').innerHTML=insight;
+  document.getElementById('fs').innerHTML=forward;
+  document.getElementById('rv').innerHTML=qs.map((q,i)=>`<div class="ritem"><span class="rdot ${ua[i]?'dot-c':'dot-w'}"></span><span class="rq">${q.s}</span></div>`).join('');
+  document.getElementById('res').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
