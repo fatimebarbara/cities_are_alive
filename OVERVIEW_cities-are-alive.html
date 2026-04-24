@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cities Are Alive — A Free Course by Dr. Fatime Barbara Hegyi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0D0D0A;--ink-mid:#2A2A26;--ink-light:#5A5A54;--ink-faint:#9A9A90;
+  --paper:#F6F4EF;--paper-warm:#EDE9E0;--paper-mid:#E0DBD0;
+  --green:#1D9E75;--green-dark:#0F6E56;--green-deep:#04342C;--green-pale:#E4F5EE;
+  --amber:#C48A20;--white:#FDFCF9;--border:rgba(0,0,0,0.08)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-size:18px;overflow-x:hidden}
+
+/* HERO */
+.hero{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:4rem 2rem 6rem}
+.hero-texture{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,.012) 60px,rgba(255,255,255,.012) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.008) 60px,rgba(255,255,255,.008) 61px)}
+.hero-glow{position:absolute;top:-20%;left:-10%;width:60%;height:80%;background:radial-gradient(ellipse,rgba(29,158,117,.1) 0%,transparent 65%);pointer-events:none}
+.hero-glow-2{position:absolute;bottom:-20%;right:-5%;width:40%;height:60%;background:radial-gradient(ellipse,rgba(196,138,32,.07) 0%,transparent 65%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;position:relative;z-index:1}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.eyebrow-text{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:400}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,10vw,9rem);font-weight:300;color:#fff;line-height:.9;letter-spacing:-.02em;margin-bottom:2.5rem;opacity:0;animation:fadeUp .9s ease .35s forwards}
+.hero-title em{font-style:italic;color:rgba(255,255,255,.4);display:block}
+.hero-title .accent{color:#9FE1CB}
+.hero-tagline{max-width:600px;font-size:1.25rem;color:rgba(255,255,255,.78);font-weight:300;line-height:1.8;margin-bottom:1rem;opacity:0;animation:fadeUp .9s ease .5s forwards}
+.hero-meta{position:absolute;bottom:3rem;right:2rem;text-align:right;opacity:0;animation:fadeUp .9s ease .8s forwards}
+.hero-meta-line{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* STRIP */
+.stat-strip{background:var(--green-dark);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.stat-item{display:flex;align-items:center;gap:10px;padding:0 2.5rem;border-right:1px solid rgba(255,255,255,.15)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:#9FE1CB}
+.stat-label{font-size:13px;color:rgba(255,255,255,.78);font-weight:300;letter-spacing:.03em}
+
+/* LAYOUT */
+.section{padding:5rem 2rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:0 0 32px;height:1px;background:var(--green);opacity:.4}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4.2rem);font-weight:300;color:var(--ink);line-height:1.1;letter-spacing:-.01em;margin-bottom:1.5rem}
+.section-heading em{font-style:italic;color:var(--ink-light)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+@media(max-width:760px){.about-grid{grid-template-columns:1fr;gap:3rem}}
+.about-body{font-size:1.1rem;color:var(--ink-mid);line-height:1.9;font-weight:300}
+.about-body p{margin-bottom:1.4rem}
+.about-body strong{font-weight:500;color:var(--ink)}
+.about-aside{padding-top:1rem}
+.pull-quote{font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:300;font-style:italic;color:var(--ink);line-height:1.4;border-left:3px solid var(--green);padding-left:1.5rem;margin-bottom:2rem}
+.author-card{background:var(--paper-warm);border:1px solid var(--paper-mid);border-radius:4px;padding:1.5rem 1.75rem}
+.author-name{font-size:1.05rem;font-weight:500;color:var(--ink);margin-bottom:4px}
+.author-title{font-size:.9rem;color:var(--ink-faint);line-height:1.6;font-weight:300}
+.author-links{margin-top:.85rem;display:flex;gap:12px;flex-wrap:wrap}
+.author-link{font-size:13px;color:var(--green-dark);text-decoration:none;font-weight:500;border-bottom:1px solid rgba(15,110,86,.3);padding-bottom:1px;transition:border-color .2s}
+.author-link:hover{border-color:var(--green)}
+
+/* JOURNEY */
+.journey-section{background:var(--ink);padding:5rem 2rem}
+.journey-inner{max-width:1100px;margin:0 auto}
+.journey-section .section-label{color:#9FE1CB}
+.journey-section .section-label::after{background:#9FE1CB}
+.journey-section .section-heading{color:#fff}
+.journey-section .section-heading em{color:rgba(255,255,255,.4)}
+.sections-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:3rem}
+@media(max-width:900px){.sections-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.sections-grid{grid-template-columns:1fr}}
+.section-card{background:rgba(255,255,255,.03);padding:2rem 1.5rem;transition:background .2s;position:relative;overflow:hidden}
+.section-card:hover{background:rgba(255,255,255,.08)}
+.section-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.section-card:nth-child(1)::before{background:#9FE1CB}
+.section-card:nth-child(2)::before{background:#7FC9FF}
+.section-card:nth-child(3)::before{background:#FAC775}
+.section-card:nth-child(4)::before{background:#CECBF6}
+.section-card:nth-child(5)::before{background:#F5B8A0}
+.section-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:rgba(255,255,255,.15);line-height:1;margin-bottom:1.25rem}
+.section-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:#fff;line-height:1.3;margin-bottom:.75rem}
+.section-desc{font-size:.92rem;color:rgba(255,255,255,.65);line-height:1.7;font-weight:300}
+.section-activities{margin-top:1.25rem;display:flex;flex-direction:column;gap:6px}
+.activity-chip{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.55)}
+.chip-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0}
+
+/* WHAT YOU LEARN */
+.learn-section{background:var(--white)}
+.learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3rem;background:var(--paper-mid);border-radius:4px;overflow:hidden}
+@media(max-width:760px){.learn-grid{grid-template-columns:1fr}}
+.learn-card{background:var(--white);padding:2.5rem 2rem;transition:background .2s}
+.learn-card:hover{background:var(--paper)}
+.learn-icon{width:48px;height:48px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1.25rem}
+.learn-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;color:var(--ink);margin-bottom:.75rem;line-height:1.3}
+.learn-body{font-size:.97rem;color:var(--ink-light);line-height:1.8;font-weight:300}
+
+/* CII */
+.cii-section{background:var(--green-deep);padding:5rem 2rem;position:relative;overflow:hidden}
+.cii-section::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:rgba(29,158,117,.1)}
+.cii-section::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:rgba(196,138,32,.06)}
+.cii-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+@media(max-width:760px){.cii-inner{grid-template-columns:1fr;gap:3rem}}
+.cii-section .section-label{color:#9FE1CB}
+.cii-section .section-label::after{background:#9FE1CB}
+.cii-section .section-heading{color:#fff}
+.cii-section .section-heading em{color:rgba(255,255,255,.4)}
+.cii-body{font-size:1.05rem;color:rgba(255,255,255,.82);line-height:1.9;font-weight:300;margin-bottom:2rem}
+.pillars-display{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pillar-row{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1rem 1.1rem;transition:background .2s}
+.pillar-row:hover{background:rgba(255,255,255,.12)}
+.pillar-row-icon{font-size:20px;margin-bottom:6px;display:block}
+.pillar-row-name{font-size:.95rem;font-weight:500;color:rgba(255,255,255,.95);margin-bottom:3px}
+.pillar-row-sub{font-size:.84rem;color:rgba(255,255,255,.58);line-height:1.5}
+
+/* WHO */
+.who-section{background:var(--paper-warm)}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+@media(max-width:800px){.who-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.who-grid{grid-template-columns:1fr}}
+.who-card{background:var(--white);border:1px solid var(--paper-mid);border-radius:4px;padding:1.75rem 1.5rem;transition:all .2s}
+.who-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.who-icon{font-size:26px;margin-bottom:1rem;display:block}
+.who-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--ink);margin-bottom:.5rem}
+.who-desc{font-size:.92rem;color:var(--ink-light);line-height:1.7;font-weight:300}
+
+/* CLOSING — no enrol button */
+.closing-section{background:var(--ink);padding:6rem 2rem;text-align:center;position:relative;overflow:hidden}
+.closing-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(29,158,117,.07) 0%,transparent 65%)}
+.closing-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.closing-label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.5rem}
+.closing-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;color:#fff;line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.closing-heading em{font-style:italic;color:rgba(255,255,255,.4)}
+.closing-heading .accent{color:#9FE1CB}
+.closing-sub{font-size:1.05rem;color:rgba(255,255,255,.68);font-weight:300;margin-bottom:2.5rem;line-height:1.8}
+.explore-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.explore-link{padding:13px 28px;border:1px solid rgba(255,255,255,.25);border-radius:4px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:400;color:rgba(255,255,255,.82);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.explore-link:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.45);color:#fff}
+.explore-link.primary{background:var(--green);border-color:var(--green);color:#fff}
+.explore-link.primary:hover{background:#1D9E75}
+.closing-trust{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.trust-item{font-size:13px;color:rgba(255,255,255,.38);display:flex;align-items:center;gap:6px}
+
+/* FOOTER */
+footer{background:#080806;padding:2.5rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-text{font-size:13px;color:rgba(255,255,255,.32);letter-spacing:.04em}
+.footer-text a{color:rgba(255,255,255,.52);text-decoration:none}
+.footer-text a:hover{color:rgba(255,255,255,.82)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-texture"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      <span class="eyebrow-text">A free course by Dr. Fatime Barbara Hegyi</span>
+    </div>
+    <h1 class="hero-title">Cities<br><span class="accent">Are</span><br><em>Alive</em></h1>
+    <p class="hero-tagline">Cities have never had more data. And yet decisions keep producing the same blind spots. This course changes the lens — from machine logic to living systems intelligence.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-meta-line">~60 minutes · Free · No prerequisites</div>
+    <div class="hero-meta-line">Based on The Future of Cities</div>
+  </div>
+</section>
+
+<div class="stat-strip">
+  <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">sections</span></div>
+  <div class="stat-item"><span class="stat-num">10</span><span class="stat-label">videos</span></div>
+  <div class="stat-item"><span class="stat-num">8</span><span class="stat-label">interactive tools</span></div>
+  <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">quizzes</span></div>
+  <div class="stat-item"><span class="stat-num">~1hr</span><span class="stat-label">total · free forever</span></div>
+</div>
+
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="about-grid reveal">
+      <div>
+        <p class="section-label">Why this course exists</p>
+        <h2 class="section-heading">The problem<br>is how we <em>see</em></h2>
+        <div class="about-body">
+          <p>Most urban thinking still operates under an old mental model. The city as a machine. Problems are technical. Departments are siloed. Success is measured in infrastructure delivered.</p>
+          <p>This model has built many things. It has also produced two generations of unintended consequences: interventions that fix one thing while silently breaking three others. Policies that look right in the data and wrong in the street.</p>
+          <p><strong>Cities Are Alive invites you to see differently.</strong> Not as a rejection of evidence — but as a deeper reading of it. Cities are living systems. They flow, respond, adapt, and carry memory. Once you start seeing patterns instead of problems, you cannot unsee them.</p>
+        </div>
+      </div>
+      <div class="about-aside">
+        <p class="pull-quote">"Once you adopt this model, patterns appear everywhere. And once you see patterns, you cannot unsee them."</p>
+        <div class="author-card">
+          <div class="author-name">Dr. Fatime Barbara Hegyi</div>
+          <div class="author-title">Urban intelligence researcher · Author of <em>The Future of Cities</em> · Creator of the City Intelligence Index</div>
+          <div class="author-links">
+            <a href="https://fatimebarbara.vision/en/books-future-of-cities/" class="author-link" target="_blank">The Future of Cities ↗</a>
+            <a href="https://fatimebarbara.vision/learning-hub/" class="author-link" target="_blank">Digital Learning Hub ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="journey-section" id="journey">
+  <div class="journey-inner">
+    <div class="reveal">
+      <p class="section-label">The course journey</p>
+      <h2 class="section-heading">Five sections.<br><em>One complete shift.</em></h2>
+    </div>
+    <div class="sections-grid reveal">
+      <div class="section-card">
+        <div class="section-num">01</div>
+        <div class="section-name">Rethinking Cities: A New Lens</div>
+        <div class="section-desc">Surface the mental model you've been using — and begin to shift it.</div>
+        <div class="section-activities">
+          <div class="activity-chip"><span class="chip-dot"></span>Welcome video</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Diagnostic quiz</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Living City Starter Guide</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-num">02</div>
+        <div class="section-name">Cities as Living Systems</div>
+        <div class="section-desc">Four flows, feedback loops, weak signals — and what adaptive capacity really means.</div>
+        <div class="section-activities">
+          <div class="activity-chip"><span class="chip-dot"></span>2 videos + CII introduction</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Systems mapping tool</div>
+          <div class="activity-chip"><span class="chip-dot"></span>7-question quiz</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-num">03</div>
+        <div class="section-name">The Three Shifts</div>
+        <div class="section-desc">From leverage to sequencing to systemic strategy — with the City Intelligence Index.</div>
+        <div class="section-activities">
+          <div class="activity-chip"><span class="chip-dot"></span>2 videos</div>
+          <div class="activity-chip"><span class="chip-dot"></span>CII six pillars guide</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Intervention design tool</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-num">04</div>
+        <div class="section-name">The Future of Cities Mindset</div>
+        <div class="section-desc">Four postures: Optimiser, Translator, Steward, Systems Listener — and when each one leads.</div>
+        <div class="section-activities">
+          <div class="activity-chip"><span class="chip-dot"></span>2 videos</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Mindset framework card</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Self-assessment tool</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-num">05</div>
+        <div class="section-name">From Insight to Action</div>
+        <div class="section-desc">Define your First Intelligent Intervention — specific, systemic, and yours.</div>
+        <div class="section-activities">
+          <div class="activity-chip"><span class="chip-dot"></span>2 videos</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Integration guide</div>
+          <div class="activity-chip"><span class="chip-dot"></span>Final intervention exercise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section learn-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">What you will gain</p>
+      <h2 class="section-heading">A new way of<br><em>reading cities</em></h2>
+    </div>
+    <div class="learn-grid reveal">
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#E4F5EE">🔄</div>
+        <div class="learn-title">See feedback loops before they become crises</div>
+        <div class="learn-body">Learn to read the patterns that produce urban outcomes — and understand why the same problems keep returning despite repeated interventions.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#E6F1FB">⚡</div>
+        <div class="learn-title">Find leverage instead of fixing symptoms</div>
+        <div class="learn-body">Understand why the most powerful urban changes are almost never the largest or most expensive — and how to identify where structural intervention actually works.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#FAEEDA">📡</div>
+        <div class="learn-title">Read weak signals before they become visible</div>
+        <div class="learn-body">Develop the perceptual skill to notice subtle shifts that predict problems long before they appear in dashboards or make headlines.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#EEEDFE">🗺️</div>
+        <div class="learn-title">Use the City Intelligence Index diagnostically</div>
+        <div class="learn-body">Understand the six-pillar framework that maps urban capacity across foundational, innovation, integration, regenerative, connected, and healthy society dimensions.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#E4F5EE">🧭</div>
+        <div class="learn-title">Develop four professional postures</div>
+        <div class="learn-body">Know when to Optimise, Translate, Steward, and Listen — and how to switch fluidly between them based on what situations actually demand.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-icon" style="background:#FAEEDA">🌱</div>
+        <div class="learn-title">Define your First Intelligent Intervention</div>
+        <div class="learn-body">Leave with a concrete, sequenced, systemically grounded action — your personal contribution to the intelligence of the city you work in or for.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cii-section">
+  <div class="cii-inner">
+    <div class="reveal">
+      <p class="section-label">The diagnostic backbone</p>
+      <h2 class="section-heading">The City<br>Intelligence<br><em>Index</em></h2>
+      <p class="cii-body">The CII is not a ranking. It doesn't put cities in competition with each other. It is a structured lens — a way of reading a city's capacity to learn, adapt, and improve across six dimensions. This course introduces you to all six pillars and how they interact.</p>
+    </div>
+    <div class="pillars-display reveal">
+      <div class="pillar-row"><span class="pillar-row-icon">🌱</span><div class="pillar-row-name">Foundational</div><div class="pillar-row-sub">Trust, participation, digital access</div></div>
+      <div class="pillar-row"><span class="pillar-row-icon">💡</span><div class="pillar-row-name">Innovator</div><div class="pillar-row-sub">R&amp;D, entrepreneurship, new value</div></div>
+      <div class="pillar-row"><span class="pillar-row-icon">🔗</span><div class="pillar-row-name">Integrator</div><div class="pillar-row-sub">Cross-sector coordination</div></div>
+      <div class="pillar-row"><span class="pillar-row-icon">♻️</span><div class="pillar-row-name">Regenerative</div><div class="pillar-row-sub">Sustainability, circular economy</div></div>
+      <div class="pillar-row"><span class="pillar-row-icon">🌐</span><div class="pillar-row-name">Connected</div><div class="pillar-row-sub">Global networks, knowledge flows</div></div>
+      <div class="pillar-row"><span class="pillar-row-icon">❤️</span><div class="pillar-row-name">Healthy Society</div><div class="pillar-row-sub">Health, dignity, belonging</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section who-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">Who this is for</p>
+      <h2 class="section-heading">Anyone who has looked at a city<br>and felt <em>something more</em><br>was going on beneath the surface</h2>
+    </div>
+    <div class="who-grid reveal">
+      <div class="who-card"><span class="who-icon">🏛️</span><div class="who-title">Policymakers & city leaders</div><div class="who-desc">Who want decisions that actually last — and understand why good intentions keep producing unintended consequences.</div></div>
+      <div class="who-card"><span class="who-icon">🔬</span><div class="who-title">Researchers & academics</div><div class="who-desc">Who study cities and want a framework that bridges quantitative data and systemic understanding.</div></div>
+      <div class="who-card"><span class="who-icon">🌆</span><div class="who-title">Urban practitioners</div><div class="who-desc">Planners, consultants, and practitioners who work with urban challenges daily and want to deepen their systemic thinking.</div></div>
+      <div class="who-card"><span class="who-icon">🌍</span><div class="who-title">Curious citizens & leaders</div><div class="who-desc">Anyone who cares about the future of cities and wants to understand what intelligence — not just data — looks like in urban governance.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing-section">
+  <div class="closing-inner">
+    <div class="closing-label">Explore more</div>
+    <h2 class="closing-heading">Cities Are Alive.<br><em>See them</em><br><span class="accent">differently.</span></h2>
+    <p class="closing-sub">A free course based on years of research, the City Intelligence Index, and the book <em>The Future of Cities</em>. No prerequisites. Just genuine curiosity about what cities are — and what they could become.</p>
+    <div class="explore-links">
+      <a href="https://fatimebarbara.vision/en/books-future-of-cities/" class="explore-link primary" target="_blank">📖 The Future of Cities ↗</a>
+      <a href="https://fatimebarbara.vision/learning-hub/" class="explore-link" target="_blank">🎓 Digital Learning Hub ↗</a>
+    </div>
+    <div class="closing-trust">
+      <span class="trust-item">📚 Based on The Future of Cities</span>
+      <span class="trust-item">🏙️ City Intelligence Index</span>
+      <span class="trust-item">⏱️ ~1 hour total</span>
+      <span class="trust-item">🆓 Free forever</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-text">
+    Cities Are Alive · Created by <a href="https://fatimebarbara.vision/learning-hub/" target="_blank">Dr. Fatime Barbara Hegyi</a> ·
+    <a href="https://fatimebarbara.vision/en/books-future-of-cities/" target="_blank">The Future of Cities</a>
+  </p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
